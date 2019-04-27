@@ -1,8 +1,9 @@
 package com.kot.kotmybatis;
 
+import com.kot.kotmybatis.common.CT;
+import com.kot.kotmybatis.common.Page;
 import com.kot.kotmybatis.entity.User;
-import com.kot.kotmybatis.mapper.BaseMapper;
-import com.kot.kotmybatis.mapper.UserMapper;
+import com.kot.kotmybatis.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,31 +16,36 @@ import java.util.List;
 @SpringBootTest
 public class KotMybatisApplicationTests {
 
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
-    private BaseMapper<User> baseMapper;
+    private UserService userService;
 
     @Test
     public void contextLoads() throws Exception {
-        final User user = userMapper.findById(1);
-        System.out.println(user);
-
-        final User byId = baseMapper.findById(2);
-        System.out.println(byId);
+        final User user = userService.findById(1);
+        System.err.println(user);
     }
 
     @Test
     public void findOne() {
-        final List<User> list = userMapper.findOne(new User("test", null));
-        System.out.println(list);
+        final User user = userService.findOne(new User("test", null));
+        System.err.println(user);
     }
 
     @Test
     public void list() {
-        final List<User> list = userMapper.list(new User("admin", "123"));
-        System.out.println(list);
+        final List<User> admin = userService.list(new User("admin", "123"));
+        final List<User> list = userService.list(new User(1));
+        System.err.println(admin);
+        System.err.println(list);
+    }
+
+    @Test
+    public void page() {
+        final Page<User> page2 = userService.selectPage(new Page<>(1, 10, "id", CT.DESC), new User("admin", "123"));
+        final Page<User> page3 = userService.selectPage(new Page<>(1, 10, "id", CT.DESC), new User(1));
+        System.err.println(page2);
+        System.err.println(page3);
     }
 
 }

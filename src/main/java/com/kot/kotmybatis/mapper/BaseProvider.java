@@ -1,38 +1,63 @@
 package com.kot.kotmybatis.mapper;
 
+import com.kot.kotmybatis.common.Page;
 import com.kot.kotmybatis.utils.KotStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.Map;
 
 public class BaseProvider<T> {
 
     private static final String WHERE = " WHERE ";
     private static final String AND = " AND ";
-    private static final String LIMIT_ONE = " LIMIT 1";
+    private static final String LIMIT = " LIMIT ";
+    private static final String LIMIT_ONE = " LIMIT 1 ";
+    private static final String ORDER_BY = " ORDER BY ";
+    private static final String SPACE = " ";
+    private static final String SPILT = ",";
+    private static final String EMPTY = "";
+    private static final String DOT = ".";
 
     public String findById(@Param("tableName") String tableName, @Param("id") Serializable id) {
         return "select * from ${tableName} where id = #{id}";
     }
 
-    public String findOne(T bean) throws IllegalAccessException {
-        return list(bean) + LIMIT_ONE;
+    public String findOne(T entity) throws IllegalAccessException {
+        return list(entity) + LIMIT_ONE;
     }
 
-    public String list(T bean) throws IllegalAccessException {
-        return "select * from " + KotStringUtils.table(bean.getClass()) + whereBuilder(bean);
+    public String list(T entity) throws IllegalAccessException {
+        return "select * from " + KotStringUtils.table(entity.getClass()) + whereBuilder(entity);
     }
 
-    private String whereBuilder(T bean) throws IllegalAccessException {
+    public String selectCount(T entity) throws IllegalAccessException {
+        return "select count(*) from " + KotStringUtils.table(entity.getClass()) + whereBuilder(entity);
+    }
+
+    public String selectPage(Map<String, Object> map) throws IllegalAccessException {
+        final Page page = (Page) map.get("page");
+        final T entity = (T) map.get("entity");
+        int pageIndex = (page.getPageIndex() - 1) * page.getPageSize();
+        return "select * from " + KotStringUtils.table(entity.getClass()) + whereBuilder(entity, "entity") + ORDER_BY + page.getOrderBy() + SPACE + page.getSort() + LIMIT + pageIndex + SPILT + page.getPageSize();
+    }
+
+    private String whereBuilder(T entity) throws IllegalAccessException {
+        return whereBuilder(entity, "");
+    }
+
+    private String whereBuilder(T entity, String alias) throws IllegalAccessException {
+        alias = StringUtils.isBlank(alias) ? EMPTY : alias + DOT;
         StringBuilder whereBuilder = new StringBuilder();
-        final Field[] fields = bean.getClass().getDeclaredFields();
+        final Field[] fields = entity.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
-            Object val = field.get(bean);
+            Object val = field.get(entity);
             if (val != null) {
                 String col = field.getName();
-                whereBuilder.append(String.format("%s=#{%s}%s", KotStringUtils.camel2Underline(col), col, AND));
+                whereBuilder.append(String.format("%s=#{%s%s}%s", KotStringUtils.camel2Underline(col), alias, col, AND));
             }
         }
         String condition = "";
