@@ -14,6 +14,8 @@ public interface MapperService<T> {
      */
     int insert(T entity);
 
+    int save(T entity) throws IllegalAccessException;
+
     /**
      * 查询操作
      */

@@ -42,8 +42,8 @@ public class KotMybatisApplicationTests {
 
     @Test
     public void page() {
-        final Page<User> page2 = userService.selectPage(new Page<>(1, 10, "id", CT.DESC), new User("admin", "123"));
-        final Page<User> page3 = userService.selectPage(new Page<>(1, 10, "id", CT.DESC), new User(1));
+        final Page<User> page2 = userService.selectPage(new Page<>(1, 10, "id,name", CT.DESC), new User("admin", "123"));
+        final Page<User> page3 = userService.selectPage(new Page<>(1, 10, "id,name", CT.DESC), new User(1));
         System.err.println(page2);
         System.err.println(page3);
     }

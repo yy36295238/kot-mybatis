@@ -3,6 +3,7 @@ package com.kot.kotmybatis.service.impl;
 import com.kot.kotmybatis.common.Page;
 import com.kot.kotmybatis.mapper.BaseMapper;
 import com.kot.kotmybatis.service.MapperService;
+import com.kot.kotmybatis.utils.KotBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author YangYu
+ * 通用实现
+ */
 @Service
 public class MapperServiceImpl<T> implements MapperService<T> {
 
@@ -23,7 +28,16 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     }
 
     @Override
-    public T findById(String tableName, Serializable id){
+    public int save(T entity) {
+        final Object id = KotBeanUtils.fieldVal("id", entity);
+        if (id == null) {
+            return insert(entity);
+        }
+        return updateById(entity);
+    }
+
+    @Override
+    public T findById(String tableName, Serializable id) {
         return baseMapper.findById(tableName, id);
     }
 
