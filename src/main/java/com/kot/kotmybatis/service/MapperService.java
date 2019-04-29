@@ -9,6 +9,8 @@ import java.util.Map;
 
 public interface MapperService<T> {
 
+    MapperService gt(String col, Object val);
+
     /**
      * 保存操作
      */
@@ -19,9 +21,9 @@ public interface MapperService<T> {
     /**
      * 查询操作
      */
-    T findById(String tableName, Serializable id) throws Exception;
+    T findById(String tableName, Serializable id);
 
-    T findById(Serializable id) throws Exception;
+    T findById(Serializable id);
 
     T findOne(T entity);
 

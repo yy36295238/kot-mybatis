@@ -23,7 +23,7 @@ public interface BaseMapper<T> {
     @SelectProvider(type = BaseProvider.class, method = "findById")
     T findById(@Param("tableName") String tableName, @Param("id") Serializable id);
 
-    default T findById(Serializable id) throws Exception {
+    default T findById(Serializable id)  {
         return findById(KotStringUtils.tableName(this), id);
     }
 

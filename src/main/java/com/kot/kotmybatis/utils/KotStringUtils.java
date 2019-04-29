@@ -1,12 +1,14 @@
 package com.kot.kotmybatis.utils;
 
 import com.kot.kotmybatis.annotation.TableName;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+@Slf4j
 public class KotStringUtils {
 
     private static final char UNDERLINE_CHAR = '_';
@@ -34,27 +36,34 @@ public class KotStringUtils {
         return result.toString().toLowerCase();
     }
 
-    public static String tableName(Object mapper) throws Exception {
-        final Field hField = mapper.getClass().getSuperclass().getDeclaredField("h");
-        hField.setAccessible(true);
-        final Object h = hField.get(mapper);
+    public static String tableName(Object mapper) {
+        try {
+            final Field hField = mapper.getClass().getSuperclass().getDeclaredField("h");
+            hField.setAccessible(true);
+            final Object h = hField.get(mapper);
 
-        Field mapperInterfaceField = h.getClass().getDeclaredField("mapperInterface");
-        mapperInterfaceField.setAccessible(true);
-        final Object mapperInterface = mapperInterfaceField.get(h);
+            Field mapperInterfaceField = h.getClass().getDeclaredField("mapperInterface");
+            mapperInterfaceField.setAccessible(true);
+            final Object mapperInterface = mapperInterfaceField.get(h);
 
-        final Field genericInfoField = mapperInterface.getClass().getDeclaredField("genericInfo");
-        genericInfoField.setAccessible(true);
-        final Object genericInfo = genericInfoField.get(mapperInterface);
+            final Field genericInfoField = mapperInterface.getClass().getDeclaredField("genericInfo");
+            genericInfoField.setAccessible(true);
+            final Object genericInfo = genericInfoField.get(mapperInterface);
 
-        final Field superInterfacesField = genericInfo.getClass().getDeclaredField("superInterfaces");
-        superInterfacesField.setAccessible(true);
-        final Object[] superInterfaces = (Object[]) superInterfacesField.get(genericInfo);
+            final Field superInterfacesField = genericInfo.getClass().getDeclaredField("superInterfaces");
+            superInterfacesField.setAccessible(true);
+            final Object[] superInterfaces = (Object[]) superInterfacesField.get(genericInfo);
 
-        ParameterizedType pType = (ParameterizedType) superInterfaces[0];
-        Type tArgs = pType.getActualTypeArguments()[0];
-        final Class<?> entityClass = Class.forName(tArgs.getTypeName());
-        return table(entityClass);
+            ParameterizedType pType = (ParameterizedType) superInterfaces[0];
+            Type tArgs = pType.getActualTypeArguments()[0];
+            final Class<?> entityClass = Class.forName(tArgs.getTypeName());
+            return table(entityClass);
+        } catch (Exception e) {
+            log.error("get table name error", e);
+        }
+        return null;
+
+
     }
 
     public static String table(Class<?> entityClass) {

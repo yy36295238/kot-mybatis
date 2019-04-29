@@ -23,6 +23,12 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     private BaseMapper<T> baseMapper;
 
     @Override
+    public MapperService gt(String col, Object val) {
+        // TODO TheadLocal 做
+        return this;
+    }
+
+    @Override
     public int insert(T entity) {
         return baseMapper.insert(entity);
     }
@@ -42,7 +48,7 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     }
 
     @Override
-    public T findById(Serializable id) throws Exception {
+    public T findById(Serializable id) {
         return baseMapper.findById(id);
     }
 
