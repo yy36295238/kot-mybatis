@@ -57,7 +57,7 @@ public class KotStringUtils {
             ParameterizedType pType = (ParameterizedType) superInterfaces[0];
             Type tArgs = pType.getActualTypeArguments()[0];
             final Class<?> entityClass = Class.forName(tArgs.getTypeName());
-            return table(entityClass);
+            return tableByClazz(entityClass);
         } catch (Exception e) {
             log.error("get table name error", e);
         }
@@ -66,7 +66,7 @@ public class KotStringUtils {
 
     }
 
-    public static String table(Class<?> entityClass) {
+    public static String tableByClazz(Class<?> entityClass) {
         // 实体带注解，直接使用做表名
         TableName tableNameAnnotation = entityClass.getAnnotation(TableName.class);
         if (tableNameAnnotation != null && StringUtils.isNoneBlank(tableNameAnnotation.value())) {

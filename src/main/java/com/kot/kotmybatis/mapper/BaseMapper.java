@@ -1,8 +1,9 @@
 package com.kot.kotmybatis.mapper;
 
 import com.kot.kotmybatis.common.Page;
-import com.kot.kotmybatis.utils.KotStringUtils;
+import com.kot.kotmybatis.entity.User;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 
 import java.io.Serializable;
@@ -10,6 +11,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author YangYu
+ */
 public interface BaseMapper<T> {
 
     /**
@@ -21,11 +25,10 @@ public interface BaseMapper<T> {
      * 查询操作
      */
     @SelectProvider(type = BaseProvider.class, method = "findById")
-    T findById(@Param("tableName") String tableName, @Param("id") Serializable id);
+    T findById(@Param("table") String table, @Param("id") Serializable id);
 
-    default T findById(Serializable id)  {
-        return findById(KotStringUtils.tableName(this), id);
-    }
+    @Select("select * from user where id= #{id}")
+    User findById1(Long id);
 
     @SelectProvider(type = BaseProvider.class, method = "findOne")
     T findOne(T entity);

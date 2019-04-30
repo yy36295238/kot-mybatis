@@ -18,9 +18,10 @@ public class MapperServiceImpl<T> implements MapperService<T> {
 
     private BaseMapper<T> baseMapper;
 
-    public MapperServiceImpl(BaseMapper<T> baseMapper) {
+    public MapperServiceImpl(BaseMapper baseMapper) {
         this.baseMapper = baseMapper;
     }
+
 
     @Override
     public MapperService fields(String field) {
@@ -143,13 +144,8 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     }
 
     @Override
-    public T findById(String tableName, Serializable id) {
-        return baseMapper.findById(tableName, id);
-    }
-
-    @Override
-    public T findById(Serializable id) {
-        return baseMapper.findById(id);
+    public T findById(String table, Serializable id) {
+        return baseMapper.findById(table, id);
     }
 
     @Override
@@ -187,6 +183,7 @@ public class MapperServiceImpl<T> implements MapperService<T> {
         }
         return page;
     }
+
 
     @Override
     public int deleteById(Serializable id) {
