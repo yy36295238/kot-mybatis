@@ -4,6 +4,7 @@ import com.kot.kotmybatis.common.Page;
 import com.kot.kotmybatis.mapper.BaseMapper;
 import com.kot.kotmybatis.service.MapperService;
 import com.kot.kotmybatis.utils.KotBeanUtils;
+import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.Collection;

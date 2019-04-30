@@ -4,12 +4,13 @@ import com.kot.kotmybatis.common.Page;
 import com.kot.kotmybatis.utils.KotStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.builder.annotation.ProviderMethodResolver;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-public class BaseProvider<T> {
+public class BaseProvider<T> implements ProviderMethodResolver {
 
     private static final String WHERE = " WHERE ";
     private static final String AND = " AND ";

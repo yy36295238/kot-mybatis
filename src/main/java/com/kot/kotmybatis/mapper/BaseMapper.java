@@ -1,9 +1,7 @@
 package com.kot.kotmybatis.mapper;
 
 import com.kot.kotmybatis.common.Page;
-import com.kot.kotmybatis.entity.User;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 
 import java.io.Serializable;
@@ -24,26 +22,23 @@ public interface BaseMapper<T> {
     /**
      * 查询操作
      */
-    @SelectProvider(type = BaseProvider.class, method = "findById")
+    @SelectProvider(type = BaseProvider.class)
     T findById(@Param("table") String table, @Param("id") Serializable id);
 
-    @Select("select * from user where id= #{id}")
-    User findById1(Long id);
-
-    @SelectProvider(type = BaseProvider.class, method = "findOne")
+    @SelectProvider(type = BaseProvider.class)
     T findOne(T entity);
 
-    @SelectProvider(type = BaseProvider.class, method = "list")
+    @SelectProvider(type = BaseProvider.class)
     List<T> list(T entity);
 
     List<T> selectBatchIds(Collection<? extends Serializable> ids);
 
     List<T> selectByMap(Map<String, Object> columnMap);
 
-    @SelectProvider(type = BaseProvider.class, method = "selectCount")
+    @SelectProvider(type = BaseProvider.class)
     int selectCount(T entity);
 
-    @SelectProvider(type = BaseProvider.class, method = "selectPage")
+    @SelectProvider(type = BaseProvider.class)
     List<T> selectPage(@Param("page") Page page, @Param("entity") T entity);
 
     /**
