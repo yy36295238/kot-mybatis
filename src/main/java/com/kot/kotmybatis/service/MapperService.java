@@ -7,9 +7,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public interface MapperService<T> {
+public interface MapperService<T> extends BaseMapperManager {
 
-    MapperService gt(String col, Object val);
+//    BaseMapperManager gt(String col, Object val);
 
     /**
      * 保存操作

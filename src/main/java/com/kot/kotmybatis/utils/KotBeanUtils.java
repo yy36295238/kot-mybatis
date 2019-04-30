@@ -1,6 +1,5 @@
 package com.kot.kotmybatis.utils;
 
-import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -53,7 +52,6 @@ public class KotBeanUtils {
      * 根据属性名称获取属性值
      */
     public static <T> Object fieldVal(String fieldName, T bean) {
-        Assert.notNull(bean, "bean is null");
         final Field field = ReflectionUtils.findField(bean.getClass(), fieldName);
         if (field == null) {
             return null;

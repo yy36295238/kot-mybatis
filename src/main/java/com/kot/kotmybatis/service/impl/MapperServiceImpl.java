@@ -4,8 +4,6 @@ import com.kot.kotmybatis.common.Page;
 import com.kot.kotmybatis.mapper.BaseMapper;
 import com.kot.kotmybatis.service.MapperService;
 import com.kot.kotmybatis.utils.KotBeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -16,15 +14,117 @@ import java.util.Map;
  * @author YangYu
  * 通用实现
  */
-@Service
 public class MapperServiceImpl<T> implements MapperService<T> {
 
-    @Autowired
     private BaseMapper<T> baseMapper;
 
+    public MapperServiceImpl(BaseMapper<T> baseMapper) {
+        this.baseMapper = baseMapper;
+    }
+
     @Override
-    public MapperService gt(String col, Object val) {
-        // TODO TheadLocal 做
+    public MapperService fields(String field) {
+        return this;
+    }
+
+    @Override
+    public MapperService fields(List<String> fields) {
+        return this;
+    }
+
+    @Override
+    public MapperService skip(Integer skip) {
+        return this;
+    }
+
+    @Override
+    public MapperService limit(Integer limit) {
+        return this;
+    }
+
+    @Override
+    public MapperService page(Integer skip, Integer limit) {
+        return this;
+    }
+
+    @Override
+    public MapperService orderBy(String... sortKey) {
+        return this;
+    }
+
+    @Override
+    public MapperService eq(String key, Object value) {
+        return null;
+    }
+
+    @Override
+    public MapperService neq(String key, Object value) {
+        return this;
+    }
+
+    @Override
+    public MapperService in(String key, Object value) {
+        return this;
+    }
+
+    @Override
+    public MapperService in(String key, Object[] value) {
+        return this;
+    }
+
+    @Override
+    public MapperService in(String key, Collection<?> value) {
+        return this;
+    }
+
+    @Override
+    public MapperService nin(String key, Object value) {
+        return this;
+    }
+
+    @Override
+    public MapperService nin(String key, Object[] value) {
+        return this;
+    }
+
+    @Override
+    public MapperService nin(String key, Collection<?> value) {
+        return this;
+    }
+
+    @Override
+    public MapperService lt(String key, Object value) {
+        return this;
+    }
+
+    @Override
+    public MapperService gt(String key, Object value) {
+        return this;
+    }
+
+
+    @Override
+    public MapperService lte(String key, Object value) {
+        return this;
+    }
+
+    @Override
+    public MapperService gte(String key, Object value) {
+        return this;
+    }
+
+    @Override
+    public MapperService or(String key, Object value) {
+        return this;
+    }
+
+    @Override
+    public MapperService like(String key, Object value) {
+        return this;
+    }
+
+    @Override
+    public MapperService between(String key, Object left, Object right) {
         return this;
     }
 
@@ -117,4 +217,6 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     public int update(T setEntity, T whereEntity) {
         return baseMapper.update(setEntity, whereEntity);
     }
+
+
 }
