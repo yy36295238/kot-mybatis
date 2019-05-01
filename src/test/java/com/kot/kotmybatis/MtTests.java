@@ -18,10 +18,10 @@ public class MtTests {
 
     @Test
     public void mt() {
-        final Object user = mapperManagerService.newQuery().findById("user", 2);
+        final User user = mapperManagerService.newQuery().findById(User.class, 2);
         System.out.println(user);
 
-        final Object admin = mapperManagerService.newQuery().findOne(new User("admin", "123"));
+        final User admin = mapperManagerService.newQuery().findOne(new User("admin", "123"));
         System.out.println(admin);
     }
 
@@ -30,7 +30,7 @@ public class MtTests {
 
     @Test
     public void mu() {
-        final User user = userService.newQuery().findById("user", 1);
+        final User user = userService.newQuery().findById(User.class, 1);
         System.out.println(user);
     }
 

@@ -23,6 +23,21 @@ public class MapperServiceImpl<T> implements MapperService<T> {
         this.baseMapper = baseMapper;
     }
 
+    /**
+     * 各种条件集合
+     */
+    private Map<String, Object> eqMap = null;
+    private Map<String, Object> neqMap = null;
+    private Map<String, Collection<?>> inMap = null;
+    private Map<String, Collection<?>> ninMap = null;
+    private Map<String, Object> ltMap = null;
+    private Map<String, Object> gtMap = null;
+    private Map<String, Object> lteMap = null;
+    private Map<String, Object> gteMap = null;
+    private Map<String, Object> orMap = null;
+    private Map<String, Object> likeMap = null;
+    private Map<String, String> coumlnMap = null;
+
 
     @Override
     public MapperService fields(String field) {
@@ -145,8 +160,8 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     }
 
     @Override
-    public T findById(String table, Serializable id) {
-        return baseMapper.findById(table, id);
+    public T findById(Class<T> clazz, Serializable id) {
+        return baseMapper.findById(clazz, id);
     }
 
     @Override

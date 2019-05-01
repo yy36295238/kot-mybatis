@@ -36,43 +36,35 @@ public class KotStringUtils {
         return result.toString().toLowerCase();
     }
 
-    public static String tableName(Object mapper) {
-        try {
-            final Field hField = mapper.getClass().getSuperclass().getDeclaredField("h");
-            hField.setAccessible(true);
-            final Object h = hField.get(mapper);
+//    public static String tableName(Object mapper) {
+//        try {
+//            final Field hField = mapper.getClass().getSuperclass().getDeclaredField("h");
+//            hField.setAccessible(true);
+//            final Object h = hField.get(mapper);
+//
+//            Field mapperInterfaceField = h.getClass().getDeclaredField("mapperInterface");
+//            mapperInterfaceField.setAccessible(true);
+//            final Object mapperInterface = mapperInterfaceField.get(h);
+//
+//            final Field genericInfoField = mapperInterface.getClass().getDeclaredField("genericInfo");
+//            genericInfoField.setAccessible(true);
+//            final Object genericInfo = genericInfoField.get(mapperInterface);
+//
+//            final Field superInterfacesField = genericInfo.getClass().getDeclaredField("superInterfaces");
+//            superInterfacesField.setAccessible(true);
+//            final Object[] superInterfaces = (Object[]) superInterfacesField.get(genericInfo);
+//
+//            ParameterizedType pType = (ParameterizedType) superInterfaces[0];
+//            Type tArgs = pType.getActualTypeArguments()[0];
+//            final Class<?> entityClass = Class.forName(tArgs.getTypeName());
+//            return tableByClazz(entityClass);
+//        } catch (Exception e) {
+//            log.error("get table name error", e);
+//        }
+//        return null;
+//
+//
+//    }
 
-            Field mapperInterfaceField = h.getClass().getDeclaredField("mapperInterface");
-            mapperInterfaceField.setAccessible(true);
-            final Object mapperInterface = mapperInterfaceField.get(h);
 
-            final Field genericInfoField = mapperInterface.getClass().getDeclaredField("genericInfo");
-            genericInfoField.setAccessible(true);
-            final Object genericInfo = genericInfoField.get(mapperInterface);
-
-            final Field superInterfacesField = genericInfo.getClass().getDeclaredField("superInterfaces");
-            superInterfacesField.setAccessible(true);
-            final Object[] superInterfaces = (Object[]) superInterfacesField.get(genericInfo);
-
-            ParameterizedType pType = (ParameterizedType) superInterfaces[0];
-            Type tArgs = pType.getActualTypeArguments()[0];
-            final Class<?> entityClass = Class.forName(tArgs.getTypeName());
-            return tableByClazz(entityClass);
-        } catch (Exception e) {
-            log.error("get table name error", e);
-        }
-        return null;
-
-
-    }
-
-    public static String tableByClazz(Class<?> entityClass) {
-        // 实体带注解，直接使用做表名
-        TableName tableNameAnnotation = entityClass.getAnnotation(TableName.class);
-        if (tableNameAnnotation != null && StringUtils.isNoneBlank(tableNameAnnotation.value())) {
-            return tableNameAnnotation.value();
-        }
-        // 实体名直接当作表名
-        return camel2Underline(entityClass.getSimpleName());
-    }
 }

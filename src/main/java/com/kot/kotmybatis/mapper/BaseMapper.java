@@ -23,7 +23,7 @@ public interface BaseMapper<T> {
      * 查询操作
      */
     @SelectProvider(type = BaseProvider.class)
-    T findById(@Param("table") String table, @Param("id") Serializable id);
+    T findById(@Param("table") Class<T> clazz, @Param("id") Serializable id);
 
     @SelectProvider(type = BaseProvider.class)
     T findOne(T entity);

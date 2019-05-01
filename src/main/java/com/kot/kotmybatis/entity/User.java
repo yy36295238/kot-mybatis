@@ -7,10 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@TableName("user")
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@TableName("user")
 public class User {
 
     @PrimaryKey

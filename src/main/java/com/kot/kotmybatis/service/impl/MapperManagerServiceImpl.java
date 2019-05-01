@@ -19,4 +19,9 @@ public class MapperManagerServiceImpl<T> implements MapperManagerService<T> {
     public MapperService<T> newQuery() {
         return new MapperServiceImpl<>(baseMapper);
     }
+
+    @Override
+    public MapperService<T> newUpdate() {
+        return new MapperServiceImpl<>(baseMapper);
+    }
 }

@@ -21,7 +21,7 @@ public interface MapperService<T> extends BaseMapperManager {
     /**
      * 查询操作
      */
-    T findById(String table, Serializable id);
+    T findById(Class<T> clazz, Serializable id);
 
     T findOne(T entity);
 
