@@ -15,6 +15,7 @@ public class CT {
     public static final String ASC = "ASC";
     public static final String DESC = "DESC";
 
-    public static final String ALIAS = "entity.";
-    public static final String ENTITY = "entity";
+    public static final String ALIAS_ENTITY = "entity";
+    public static final String ALIAS_CONDITION = "conditionMap";
+    public static final String SQL_CONDITION = "conditionSql";
 }

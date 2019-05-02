@@ -6,46 +6,46 @@ import java.util.List;
 /**
  * @author yangyu
  */
-public interface BaseMapperManager {
+public interface BaseMapperManager<T> {
 
     /**
      * 返回指定字段
      */
-    MapperService fields(String field);
+    MapperService<T> fields(String field);
 
-    MapperService fields(List<String> fields);
+    MapperService<T> fields(List<String> fields);
 
-    MapperService skip(Integer skip);
+    MapperService<T> skip(Integer skip);
 
-    MapperService limit(Integer limit);
+    MapperService<T> limit(Integer limit);
 
-    MapperService page(Integer skip, Integer limit);
+    MapperService<T> page(Integer skip, Integer limit);
 
-    MapperService orderBy(String... sortKey);
+    MapperService<T> orderBy(String... sortKey);
 
-    MapperService eq(String key, Object value);
+    MapperService<T> eq(String key, Object value);
 
-    MapperService neq(String key, Object value);
+    MapperService<T> neq(String key, Object value);
 
-    MapperService in(String key, Object[] values);
+    MapperService<T> in(String key, Object[] values);
 
-    MapperService in(String key, Collection<?> values);
+    MapperService<T> in(String key, Collection<?> values);
 
-    MapperService nin(String key, Object[] values);
+    MapperService<T> nin(String key, Object[] values);
 
-    MapperService nin(String key, Collection<?> values);
+    MapperService<T> nin(String key, Collection<?> values);
 
-    MapperService lt(String key, Object value);
+    MapperService<T> lt(String key, Object value);
 
-    MapperService gt(String key, Object value);
+    MapperService<T> gt(String key, Object value);
 
-    MapperService lte(String key, Object value);
+    MapperService<T> lte(String key, Object value);
 
-    MapperService gte(String key, Object value);
+    MapperService<T> gte(String key, Object value);
 
-    MapperService or(String key, Object value);
+    MapperService<T> or(String key, Object value);
 
-    MapperService like(String key, Object value);
+    MapperService<T> like(String key, Object value);
 
-    MapperService between(String key, Object left, Object right);
+    MapperService<T> between(String key, Object left, Object right);
 }

@@ -1,5 +1,6 @@
 package com.kot.kotmybatis.mapper;
 
+import com.kot.kotmybatis.common.CT;
 import com.kot.kotmybatis.common.Page;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -26,20 +27,20 @@ public interface BaseMapper<T> {
     T findById(@Param("table") Class<T> clazz, @Param("id") Serializable id);
 
     @SelectProvider(type = BaseProvider.class)
-    T findOne(@Param("conditionSql") String conditionList, @Param("entity") T entity);
+    T findOne(@Param(CT.SQL_CONDITION) String conditionList, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
 
     @SelectProvider(type = BaseProvider.class)
-    List<T> list(@Param("conditionSql") String conditionList, @Param("entity") T entity);
+    List<T> list(@Param(CT.SQL_CONDITION) String conditionList, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
 
     List<T> selectBatchIds(Collection<? extends Serializable> ids);
 
     List<T> selectByMap(Map<String, Object> columnMap);
 
     @SelectProvider(type = BaseProvider.class)
-    int selectCount(@Param("conditionSql") String conditionList, @Param("entity") T entity);
+    int selectCount(@Param(CT.SQL_CONDITION) String conditionList, @Param(CT.ALIAS_ENTITY) T entity);
 
     @SelectProvider(type = BaseProvider.class)
-    List<T> selectPage(@Param("conditionSql") String conditionList, @Param("page") Page page, @Param("entity") T entity);
+    List<T> selectPage(@Param(CT.SQL_CONDITION) String conditionList, @Param("page") Page page, @Param(CT.ALIAS_ENTITY) T entity);
 
     /**
      * 删除操作

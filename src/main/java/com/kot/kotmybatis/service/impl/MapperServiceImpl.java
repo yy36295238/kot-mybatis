@@ -6,9 +6,11 @@ import com.kot.kotmybatis.enums.ConditionEnum;
 import com.kot.kotmybatis.mapper.BaseMapper;
 import com.kot.kotmybatis.service.MapperService;
 import com.kot.kotmybatis.utils.KotBeanUtils;
+import com.kot.kotmybatis.utils.KotStringUtils;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author YangYu
@@ -18,7 +20,7 @@ public class MapperServiceImpl<T> implements MapperService<T> {
 
     private BaseMapper<T> baseMapper;
 
-    public MapperServiceImpl(BaseMapper baseMapper) {
+    MapperServiceImpl(BaseMapper<T> baseMapper) {
         this.baseMapper = baseMapper;
     }
 
@@ -35,112 +37,113 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     private Map<String, Object> gteMap = null;
     private Map<String, Object> orMap = null;
     private Map<String, Object> likeMap = null;
+    private Map<String, Object> conditonMap = new HashMap<>();
 
     @Override
-    public MapperService fields(String field) {
+    public MapperService<T> fields(String field) {
         return this;
     }
 
     @Override
-    public MapperService fields(List<String> fields) {
+    public MapperService<T> fields(List<String> fields) {
         return this;
     }
 
     @Override
-    public MapperService skip(Integer skip) {
+    public MapperService<T> skip(Integer skip) {
         return this;
     }
 
     @Override
-    public MapperService limit(Integer limit) {
+    public MapperService<T> limit(Integer limit) {
         return this;
     }
 
     @Override
-    public MapperService page(Integer skip, Integer limit) {
+    public MapperService<T> page(Integer skip, Integer limit) {
         return this;
     }
 
     @Override
-    public MapperService orderBy(String... sortKey) {
+    public MapperService<T> orderBy(String... sortKey) {
         return this;
     }
 
     @Override
-    public MapperService eq(String key, Object value) {
+    public MapperService<T> eq(String key, Object value) {
         (eqMap = map(eqMap)).put(key, value);
         return this;
     }
 
     @Override
-    public MapperService neq(String key, Object value) {
+    public MapperService<T> neq(String key, Object value) {
         (neqMap = map(neqMap)).put(key, value);
         return this;
     }
 
     @Override
-    public MapperService in(String key, Object[] values) {
+    public MapperService<T> in(String key, Object[] values) {
         (inMap = map(inMap)).put(key, Arrays.asList(values));
         return this;
     }
 
     @Override
-    public MapperService in(String key, Collection<?> values) {
-        (inMap = map(inMap)).put(key, Arrays.asList(values));
+    public MapperService<T> in(String key, Collection<?> values) {
+        (inMap = map(inMap)).put(key, values);
         return this;
     }
 
     @Override
-    public MapperService nin(String key, Object[] values) {
+    public MapperService<T> nin(String key, Object[] values) {
         (ninMap = map(ninMap)).put(key, Arrays.asList(values));
         return this;
     }
 
     @Override
-    public MapperService nin(String key, Collection<?> values) {
-        (ninMap = map(ninMap)).put(key, Arrays.asList(values));
+    public MapperService<T> nin(String key, Collection<?> values) {
+        (ninMap = map(ninMap)).put(key, values);
         return this;
     }
 
     @Override
-    public MapperService lt(String key, Object value) {
+    public MapperService<T> lt(String key, Object value) {
         (ltMap = map(ltMap)).put(key, value);
         return this;
     }
 
     @Override
-    public MapperService gt(String key, Object value) {
+    public MapperService<T> gt(String key, Object value) {
         (gtMap = map(gtMap)).put(key, value);
         return this;
     }
 
 
     @Override
-    public MapperService lte(String key, Object value) {
+    public MapperService<T> lte(String key, Object value) {
         (lteMap = map(lteMap)).put(key, value);
         return this;
     }
 
     @Override
-    public MapperService gte(String key, Object value) {
+    public MapperService<T> gte(String key, Object value) {
         (gteMap = map(gteMap)).put(key, value);
         return this;
     }
 
     @Override
-    public MapperService or(String key, Object value) {
+    public MapperService<T> or(String key, Object value) {
         (orMap = map(orMap)).put(key, value);
         return this;
     }
 
     @Override
-    public MapperService like(String key, Object value) {
+    public MapperService<T> like(String key, Object value) {
         (likeMap = map(likeMap)).put(key, value);
         return this;
     }
 
     @Override
-    public MapperService between(String key, Object left, Object right) {
+    public MapperService<T> between(String key, Object left, Object right) {
         map(gteMap).put(key, left);
         map(lteMap).put(key, right);
         return this;
@@ -167,12 +170,12 @@ public class MapperServiceImpl<T> implements MapperService<T> {
 
     @Override
     public T findOne(T entity) {
-        return baseMapper.findOne(conditionList(), entity);
+        return baseMapper.findOne(conditionSql(), conditonMap, entity);
     }
 
     @Override
     public List<T> list(T entity) {
-        return baseMapper.list(conditionList(), entity);
+        return baseMapper.list(conditionSql(), conditonMap, entity);
     }
 
     @Override
@@ -187,14 +190,14 @@ public class MapperServiceImpl<T> implements MapperService<T> {
 
     @Override
     public Integer selectCount(T entity) {
-        return baseMapper.selectCount(conditionList(), entity);
+        return baseMapper.selectCount(conditionSql(), entity);
     }
 
     @Override
     public Page<T> selectPage(Page<T> page, T entity) {
-        final int count = baseMapper.selectCount(conditionList(), entity);
+        final int count = baseMapper.selectCount(conditionSql(), entity);
         if (count > 0) {
-            final List<T> list = baseMapper.selectPage(conditionList(), page, entity);
+            final List<T> list = baseMapper.selectPage(conditionSql(), page, entity);
             page.setData(list);
             page.setTotal(count);
         }
@@ -233,26 +236,56 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     }
 
     private Map<String, Object> map(Map<String, Object> conditionMap) {
-        return conditionMap = (conditionMap == null ? new HashMap<>() : conditionMap);
+        return (conditionMap == null ? new HashMap<>() : conditionMap);
     }
 
     /**
      * 实际查询条件
      */
-    private String conditionList() {
-        final List<Map<String, Object>> maps = Arrays.asList(eqMap, neqMap, inMap, ninMap, ltMap, gtMap, lteMap, gteMap, orMap, likeMap);
+    private String conditionSql() {
         StringBuilder sqlBuilder = new StringBuilder();
         if (eqMap != null) {
-            eqMap.forEach((k, v) -> {
-                sqlBuilder.append(CT.SPACE).append(k).append(ConditionEnum.EQ.oper).append(v).append(CT.AND);
-            });
+            eqMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.EQ, k, v));
+            conditonMap.putAll(eqMap);
         }
         if (neqMap != null) {
-            eqMap.forEach((k, v) -> {
-                sqlBuilder.append(CT.SPACE).append(k).append(ConditionEnum.NEQ.oper).append(v).append(CT.AND);
-            });
+            neqMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.EQ, k, v));
+            conditonMap.putAll(neqMap);
+        }
+        if (inMap != null) {
+            inMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.IN, k, v));
+            conditonMap.putAll(inMap);
         }
         return sqlBuilder.toString();
     }
+
+    private void sqlBuilder(StringBuilder sqlBuilder, ConditionEnum conditionEnum, String k, Object v) {
+        final StringBuilder appender = sqlBuilder.append(CT.SPACE).append(k).append(conditionEnum.oper);
+        // id in ('','');
+        final String collect;
+        if (conditionEnum == ConditionEnum.IN) {
+            Collection collection = (Collection) v;
+            if (isStringForCollection(collection)) {
+                Collection<String> strings = (Collection<String>) v;
+                collect = strings.stream().peek(c -> c = "'" + c + "'").collect(Collectors.joining(","));
+            } else {
+                collect = KotStringUtils.joinSplit(collection);
+            }
+            appender.append(CT.ALIAS_CONDITION).append(CT.DOT).append(collect);
+        } else {
+            appender.append("#{").append(CT.ALIAS_CONDITION).append(CT.DOT).append(k).append("}");
+        }
+        appender.append(CT.AND);
+
+
+    }
+
+    private boolean isStringForCollection(Collection<?> collection) {
+        for (Object o : collection) {
+            return o instanceof String;
+        }
+        return false;
+    }
+
 
 }

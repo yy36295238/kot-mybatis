@@ -2,10 +2,21 @@ package com.kot.kotmybatis.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collection;
+
 @Slf4j
 public class KotStringUtils {
 
     private static final char UNDERLINE_CHAR = '_';
+
+    public static String joinSplit(Collection<?> collection) {
+        StringBuilder sb = new StringBuilder();
+        collection.forEach(c -> {
+            sb.append(c.toString()).append(",");
+        });
+        sb.deleteCharAt(sb.lastIndexOf(","));
+        return sb.toString();
+    }
 
     /**
      * 截取后缀

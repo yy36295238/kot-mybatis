@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -28,22 +29,32 @@ public class KotMybatisApplicationTests {
 
     @Test
     public void findOne() {
-        final User user = userService.newQuery().findOne(new User("test", null));
+        final User user = userService.newQuery()
+                .eq("password", "123")
+                .findOne(new User("test", null));
         System.err.println(user);
     }
 
     @Test
     public void list() {
-//        final List<User> admin = userService.newQuery().list(new User("admin", "123"));
+        final List<User> admin = userService.newQuery().list(new User("admin", "123"));
 //        final List<User> list = userService.newQuery().list(new User(1));
-//        System.err.println(admin);
+        System.err.println(admin);
 //        System.err.println(list);
-        final List list1 = userService.newQuery()
+        final List<User> list = userService.newQuery()
                 .eq("user_name", "test")
-                .eq("id", 1)
+                .eq("id", 2)
                 .eq("password", "123")
-                .list(User.class);
-        System.err.println(list1);
+                .list(new User());
+        System.err.println(list);
+    }
+
+    @Test
+    public void in() {
+        final List<User> list = userService.newQuery()
+                .in("id", Arrays.asList(1, 2, 3))
+                .list(new User());
+        System.err.println("in: " + list);
     }
 
     @Test

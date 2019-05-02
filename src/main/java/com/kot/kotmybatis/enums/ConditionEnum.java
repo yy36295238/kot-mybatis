@@ -6,14 +6,15 @@ public enum ConditionEnum {
     /**
      * 筛选条件
      */
-    EQ("="),
-    NEQ("<>"),
-    GT(">"),
-    LT("<"),
-    GTE(">="),
-    LTE("<="),
-    IN("in"),
-    NIN("not in");
+    EQ(" = "),
+    NEQ(" <> "),
+    GT(" > "),
+    LT(" < "),
+    GTE(" >= "),
+    LTE(" <= "),
+    IN(" IN "),
+    NIN(" NOT IN "),
+    LIKE(" LIKE ");
 
     public String oper;
 
