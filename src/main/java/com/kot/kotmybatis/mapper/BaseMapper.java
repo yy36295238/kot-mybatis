@@ -26,20 +26,20 @@ public interface BaseMapper<T> {
     T findById(@Param("table") Class<T> clazz, @Param("id") Serializable id);
 
     @SelectProvider(type = BaseProvider.class)
-    T findOne(T entity);
+    T findOne(@Param("conditionSql") String conditionList, @Param("entity") T entity);
 
     @SelectProvider(type = BaseProvider.class)
-    List<T> list(T entity);
+    List<T> list(@Param("conditionSql") String conditionList, @Param("entity") T entity);
 
     List<T> selectBatchIds(Collection<? extends Serializable> ids);
 
     List<T> selectByMap(Map<String, Object> columnMap);
 
     @SelectProvider(type = BaseProvider.class)
-    int selectCount(T entity);
+    int selectCount(@Param("conditionSql") String conditionList, @Param("entity") T entity);
 
     @SelectProvider(type = BaseProvider.class)
-    List<T> selectPage(@Param("page") Page page, @Param("entity") T entity);
+    List<T> selectPage(@Param("conditionSql") String conditionList, @Param("page") Page page, @Param("entity") T entity);
 
     /**
      * 删除操作

@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @TableName("user")
 public class User {
 
-    @PrimaryKey
     private Long id;
     private String userName;
     private String password;

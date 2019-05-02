@@ -1,17 +1,18 @@
 package com.kot.kotmybatis.utils;
 
-import com.kot.kotmybatis.annotation.TableName;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 
 @Slf4j
 public class KotStringUtils {
 
     private static final char UNDERLINE_CHAR = '_';
+
+    /**
+     * 截取后缀
+     */
+    public static String subSuffix(String oriStr, String suffix) {
+        return oriStr.substring(0, oriStr.lastIndexOf(suffix));
+    }
 
     /**
      * 驼峰转下划线

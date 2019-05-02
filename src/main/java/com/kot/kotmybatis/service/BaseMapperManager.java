@@ -27,17 +27,13 @@ public interface BaseMapperManager {
 
     MapperService neq(String key, Object value);
 
-    MapperService in(String key, Object value);
+    MapperService in(String key, Object[] values);
 
-    MapperService in(String key, Object[] value);
+    MapperService in(String key, Collection<?> values);
 
-    MapperService in(String key, Collection<?> value);
+    MapperService nin(String key, Object[] values);
 
-    MapperService nin(String key, Object value);
-
-    MapperService nin(String key, Object[] value);
-
-    MapperService nin(String key, Collection<?> value);
+    MapperService nin(String key, Collection<?> values);
 
     MapperService lt(String key, Object value);
 

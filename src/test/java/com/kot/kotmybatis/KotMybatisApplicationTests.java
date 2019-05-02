@@ -34,10 +34,16 @@ public class KotMybatisApplicationTests {
 
     @Test
     public void list() {
-        final List<User> admin = userService.newQuery().list(new User("admin", "123"));
-        final List<User> list = userService.newQuery().list(new User(1));
-        System.err.println(admin);
-        System.err.println(list);
+//        final List<User> admin = userService.newQuery().list(new User("admin", "123"));
+//        final List<User> list = userService.newQuery().list(new User(1));
+//        System.err.println(admin);
+//        System.err.println(list);
+        final List list1 = userService.newQuery()
+                .eq("user_name", "test")
+                .eq("id", 1)
+                .eq("password", "123")
+                .list(User.class);
+        System.err.println(list1);
     }
 
     @Test
