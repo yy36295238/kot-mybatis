@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.builder.annotation.ProviderMethodResolver;
-import org.apache.ibatis.jdbc.SQL;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
