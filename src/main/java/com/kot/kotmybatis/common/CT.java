@@ -18,4 +18,7 @@ public class CT {
     public static final String ALIAS_ENTITY = "entity";
     public static final String ALIAS_CONDITION = "conditionMap";
     public static final String SQL_CONDITION = "conditionSql";
+
+    public static final String LEFT_KUO = "(";
+    public static final String RIGHT_KUO = ")";
 }

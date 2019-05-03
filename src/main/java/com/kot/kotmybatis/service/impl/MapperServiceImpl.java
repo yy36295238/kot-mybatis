@@ -7,6 +7,7 @@ import com.kot.kotmybatis.mapper.BaseMapper;
 import com.kot.kotmybatis.service.MapperService;
 import com.kot.kotmybatis.utils.KotBeanUtils;
 import com.kot.kotmybatis.utils.KotStringUtils;
+import com.kot.kotmybatis.utils.MapUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -144,8 +145,8 @@ public class MapperServiceImpl<T> implements MapperService<T> {
 
     @Override
     public MapperService<T> between(String key, Object left, Object right) {
-        map(gteMap).put(key, left);
-        map(lteMap).put(key, right);
+        (gteMap = map(gteMap)).put(key, left);
+        (lteMap = map(lteMap)).put(key, right);
         return this;
     }
 
@@ -246,32 +247,60 @@ public class MapperServiceImpl<T> implements MapperService<T> {
         StringBuilder sqlBuilder = new StringBuilder();
         if (eqMap != null) {
             eqMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.EQ, k, v));
+            MapUtils.toOtherKey(eqMap, newKey(ConditionEnum.EQ));
             conditonMap.putAll(eqMap);
         }
         if (neqMap != null) {
-            neqMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.EQ, k, v));
+            neqMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.NEQ, k, v));
+            MapUtils.toOtherKey(neqMap, newKey(ConditionEnum.NEQ));
             conditonMap.putAll(neqMap);
         }
         if (inMap != null) {
             inMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.IN, k, v));
+            MapUtils.toOtherKey(inMap, newKey(ConditionEnum.IN));
             conditonMap.putAll(inMap);
+        }
+        if (ninMap != null) {
+            ninMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.NIN, k, v));
+            MapUtils.toOtherKey(ninMap, newKey(ConditionEnum.NIN));
+            conditonMap.putAll(ninMap);
+        }
+        if (ltMap != null) {
+            ltMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.LT, k, v));
+            MapUtils.toOtherKey(ltMap, newKey(ConditionEnum.LT));
+            conditonMap.putAll(ltMap);
+        }
+        if (gtMap != null) {
+            gtMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.GT, k, v));
+            MapUtils.toOtherKey(gtMap, newKey(ConditionEnum.GT));
+            conditonMap.putAll(gtMap);
+        }
+        if (lteMap != null) {
+            lteMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.LTE, k, v));
+            MapUtils.toOtherKey(lteMap, newKey(ConditionEnum.LTE));
+            conditonMap.putAll(lteMap);
+        }
+        if (gteMap != null) {
+            gteMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.GTE, k, v));
+            MapUtils.toOtherKey(gteMap, newKey(ConditionEnum.GTE));
+            conditonMap.putAll(gteMap);
         }
         return sqlBuilder.toString();
     }
 
     private void sqlBuilder(StringBuilder sqlBuilder, ConditionEnum conditionEnum, String k, Object v) {
         final StringBuilder appender = sqlBuilder.append(CT.SPACE).append(k).append(conditionEnum.oper);
-        // id in ('','');
+        k = conditionEnum.name() + "_" + k;
         final String collect;
-        if (conditionEnum == ConditionEnum.IN) {
+        if (conditionEnum == ConditionEnum.IN || conditionEnum == ConditionEnum.NIN) {
             Collection collection = (Collection) v;
             if (isStringForCollection(collection)) {
                 Collection<String> strings = (Collection<String>) v;
-                collect = strings.stream().peek(c -> c = "'" + c + "'").collect(Collectors.joining(","));
+                collect = strings.stream().map(c -> c = "'" + c + "'").collect(Collectors.joining(",", CT.LEFT_KUO, CT.RIGHT_KUO));
             } else {
-                collect = KotStringUtils.joinSplit(collection);
+                collect = KotStringUtils.joinSplit(collection, CT.LEFT_KUO, CT.RIGHT_KUO);
             }
-            appender.append(CT.ALIAS_CONDITION).append(CT.DOT).append(collect);
+            appender.append(collect);
         } else {
             appender.append("#{").append(CT.ALIAS_CONDITION).append(CT.DOT).append(k).append("}");
         }
@@ -285,6 +314,10 @@ public class MapperServiceImpl<T> implements MapperService<T> {
             return o instanceof String;
         }
         return false;
+    }
+
+    private String newKey(ConditionEnum conditionEnum) {
+        return conditionEnum.name() + "_%s";
     }
 
 

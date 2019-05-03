@@ -9,12 +9,13 @@ public class KotStringUtils {
 
     private static final char UNDERLINE_CHAR = '_';
 
-    public static String joinSplit(Collection<?> collection) {
-        StringBuilder sb = new StringBuilder();
+    public static String joinSplit(Collection<?> collection, String prefix, String suffix) {
+        StringBuilder sb = new StringBuilder(prefix);
         collection.forEach(c -> {
             sb.append(c.toString()).append(",");
         });
         sb.deleteCharAt(sb.lastIndexOf(","));
+        sb.append(suffix);
         return sb.toString();
     }
 
