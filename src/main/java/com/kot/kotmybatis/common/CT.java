@@ -4,6 +4,7 @@ public class CT {
 
     public static final String WHERE = " WHERE ";
     public static final String AND = " AND ";
+    public static final String OR = " OR ";
     public static final String LIMIT = " LIMIT ";
     public static final String LIMIT_ONE = " LIMIT 1 ";
     public static final String ORDER_BY = " ORDER BY ";

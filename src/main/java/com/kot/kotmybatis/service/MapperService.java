@@ -52,4 +52,5 @@ public interface MapperService<T> extends BaseMapperManager<T> {
     int updateById(T entity);
 
     int update(T setEntity, T whereEntity);
+
 }

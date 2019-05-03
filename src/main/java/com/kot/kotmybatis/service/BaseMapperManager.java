@@ -48,4 +48,6 @@ public interface BaseMapperManager<T> {
     MapperService<T> like(String key, Object value);
 
     MapperService<T> between(String key, Object left, Object right);
+
+    MapperService<T> isNull(String key);
 }

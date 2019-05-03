@@ -49,13 +49,14 @@ public class BaseProvider<T> implements ProviderMethodResolver {
         StringBuilder whereBuilder = new StringBuilder();
         // 实体条件
         entitySqlBuilder(whereBuilder, entity);
+        // 链式条件
         whereBuilder.append(conditionSql);
 
         String condition = "";
         final int len = whereBuilder.length();
         if (len > 0) {
-            // 删除最后一个`AND`
-            condition = CT.WHERE + KotStringUtils.subSuffix(whereBuilder.toString(), CT.AND);
+            // 删除第一个一个`AND`、`OR`
+            condition = CT.WHERE + KotStringUtils.removeFirstAndOr(whereBuilder.toString());
         }
         return condition;
     }
@@ -69,7 +70,7 @@ public class BaseProvider<T> implements ProviderMethodResolver {
                     Object val = field.get(entity);
                     if (val != null) {
                         String col = field.getName();
-                        whereBuilder.append(String.format("%s=#{%s%s}%s", KotStringUtils.camel2Underline(col), CT.ALIAS_ENTITY + CT.DOT, col, CT.AND));
+                        whereBuilder.append(String.format("%s%s=#{%s%s}", KotStringUtils.camel2Underline(col), CT.AND, CT.ALIAS_ENTITY + CT.DOT, col));
                     }
                 }
             } catch (Exception e) {

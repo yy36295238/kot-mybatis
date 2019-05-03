@@ -1,5 +1,6 @@
 package com.kot.kotmybatis.utils;
 
+import com.kot.kotmybatis.common.CT;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
@@ -9,6 +10,9 @@ public class KotStringUtils {
 
     private static final char UNDERLINE_CHAR = '_';
 
+    /**
+     * 集合拼接逗号并添加前后缀  ('a','b','c')
+     */
     public static String joinSplit(Collection<?> collection, String prefix, String suffix) {
         StringBuilder sb = new StringBuilder(prefix);
         collection.forEach(c -> {
@@ -17,6 +21,28 @@ public class KotStringUtils {
         sb.deleteCharAt(sb.lastIndexOf(","));
         sb.append(suffix);
         return sb.toString();
+    }
+
+    /**
+     * 集合拼接逗号并添加前后缀  'a'
+     */
+    public static String joinPreSuffix(String str, String prefix, String suffix) {
+        return prefix + str + suffix;
+    }
+
+
+    /**
+     * 截取后缀
+     */
+    public static String removeFirstAndOr(String oriStr) {
+        if (oriStr.startsWith(CT.AND)) {
+            return oriStr.replaceFirst(CT.AND, "");
+        }
+        if (oriStr.startsWith(CT.OR)) {
+            return oriStr.replaceFirst(CT.OR, "");
+        }
+        return oriStr;
+
     }
 
     /**
@@ -49,35 +75,11 @@ public class KotStringUtils {
         return result.toString().toLowerCase();
     }
 
-//    public static String tableName(Object mapper) {
-//        try {
-//            final Field hField = mapper.getClass().getSuperclass().getDeclaredField("h");
-//            hField.setAccessible(true);
-//            final Object h = hField.get(mapper);
-//
-//            Field mapperInterfaceField = h.getClass().getDeclaredField("mapperInterface");
-//            mapperInterfaceField.setAccessible(true);
-//            final Object mapperInterface = mapperInterfaceField.get(h);
-//
-//            final Field genericInfoField = mapperInterface.getClass().getDeclaredField("genericInfo");
-//            genericInfoField.setAccessible(true);
-//            final Object genericInfo = genericInfoField.get(mapperInterface);
-//
-//            final Field superInterfacesField = genericInfo.getClass().getDeclaredField("superInterfaces");
-//            superInterfacesField.setAccessible(true);
-//            final Object[] superInterfaces = (Object[]) superInterfacesField.get(genericInfo);
-//
-//            ParameterizedType pType = (ParameterizedType) superInterfaces[0];
-//            Type tArgs = pType.getActualTypeArguments()[0];
-//            final Class<?> entityClass = Class.forName(tArgs.getTypeName());
-//            return tableByClazz(entityClass);
-//        } catch (Exception e) {
-//            log.error("get table name error", e);
-//        }
-//        return null;
-//
-//
-//    }
+    public static void main(String[] args) {
+        String a = " and and 1=1 and 2=2";
+        System.out.println(a.trim().startsWith("and"));
+        System.out.println(a.replaceFirst("and", ""));
+    }
 
 
 }

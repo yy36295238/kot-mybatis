@@ -21,7 +21,7 @@ public class KotMybatisConditionTests {
 
     @Test
     public void eq() {
-        final List<User> users = userService.newQuery().eq("user_name", "admin").list(new User());
+        final List<User> users = userService.newQuery().eq("user_name", "admin").eq("create_user", null).neq("user_status", -9).list(new User());
         System.err.println(users);
     }
 
@@ -58,6 +58,24 @@ public class KotMybatisConditionTests {
     @Test
     public void between() {
         final List<User> users = userService.newQuery().between("id", 12, 13).list(new User());
+        System.err.println(users);
+    }
+
+    @Test
+    public void or() {
+        final List<User> users = userService.newQuery().or("user_name", "test").eq("id", 1).or("id", 12).list(new User());
+        System.err.println(users);
+    }
+
+    @Test
+    public void like() {
+        final List<User> users = userService.newQuery().eq("user_status", 1).like("user_name", "adm").list(new User());
+        System.err.println(users);
+    }
+
+    @Test
+    public void isNull() {
+        final List<User> users = userService.newQuery().isNull("create_user").list(new User());
         System.err.println(users);
     }
 

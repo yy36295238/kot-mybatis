@@ -14,7 +14,9 @@ public enum ConditionEnum {
     LTE(" <= "),
     IN(" IN "),
     NIN(" NOT IN "),
-    LIKE(" LIKE ");
+    OR(" = "),
+    LIKE(" LIKE "),
+    NULL(" IS NULL ");
 
     public String oper;
 
