@@ -10,7 +10,6 @@ import com.kot.kotmybatis.utils.KotStringUtils;
 import com.kot.kotmybatis.utils.MapUtils;
 import org.springframework.util.Assert;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,25 +26,9 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     }
 
     /**
-     * 各种条件集合
-     */
-    private Set<String> columns = new HashSet<>();
-    private Map<String, Object> eqMap = null;
-    private Map<String, Object> neqMap = null;
-    private Map<String, Object> inMap = null;
-    private Map<String, Object> ninMap = null;
-    private Map<String, Object> ltMap = null;
-    private Map<String, Object> gtMap = null;
-    private Map<String, Object> lteMap = null;
-    private Map<String, Object> gteMap = null;
-    private Map<String, Object> orMap = null;
-    private Map<String, Object> likeMap = null;
-    private Map<String, Object> nullMap = null;
-    private Map<String, Object> conditionMap = new HashMap<>();
-
-
-    /**
+     * ======================
      * 公共方法
+     * ======================
      */
     @Override
     public int insert(T entity) {
@@ -72,17 +55,7 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     }
 
     @Override
-    public List<T> selectBatchIds(Collection<? extends Serializable> ids) {
-        return baseMapper.selectBatchIds(ids);
-    }
-
-    @Override
-    public List<T> selectByMap(Map<String, Object> columnMap) {
-        return baseMapper.selectByMap(columnMap);
-    }
-
-    @Override
-    public Integer selectCount(T entity) {
+    public Integer count(T entity) {
         return baseMapper.count(conditionSql(), conditionMap, entity);
     }
 
@@ -99,23 +72,8 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     }
 
     @Override
-    public int deleteById(Serializable id) {
-        return baseMapper.deleteById(id);
-    }
-
-    @Override
-    public int deleteByMap(Map<String, Object> columnMap) {
-        return baseMapper.deleteByMap(columnMap);
-    }
-
-    @Override
-    public int deleteByEntity(T entity) {
-        return baseMapper.deleteByEntity(entity);
-    }
-
-    @Override
-    public int deleteBatchIds(Collection<? extends Serializable> ids) {
-        return baseMapper.deleteBatchIds(ids);
+    public int delete(T entity) {
+        return baseMapper.delete(entity);
     }
 
     @Override
@@ -133,8 +91,24 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     }
 
     /**
-     * 拼接查询条件
+     * ======================
+     * 各种条件集合
+     * ======================
      */
+    private Set<String> columns = new HashSet<>();
+    private Map<String, Object> eqMap = null;
+    private Map<String, Object> neqMap = null;
+    private Map<String, Object> inMap = null;
+    private Map<String, Object> ninMap = null;
+    private Map<String, Object> ltMap = null;
+    private Map<String, Object> gtMap = null;
+    private Map<String, Object> lteMap = null;
+    private Map<String, Object> gteMap = null;
+    private Map<String, Object> orMap = null;
+    private Map<String, Object> likeMap = null;
+    private Map<String, Object> nullMap = null;
+    private Map<String, Object> conditionMap = new HashMap<>();
+
     @Override
     public MapperService<T> fields(String field) {
         Assert.notNull(field, "field is null");
@@ -246,64 +220,64 @@ public class MapperServiceImpl<T> implements MapperService<T> {
         StringBuilder sqlBuilder = new StringBuilder();
         if (eqMap != null) {
             eqMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.EQ, k, v));
-            MapUtils.toOtherKey(eqMap, newKey(ConditionEnum.EQ));
+            MapUtils.aliasKey(eqMap, newKey(ConditionEnum.EQ));
             conditionMap.putAll(eqMap);
         }
         if (neqMap != null) {
             neqMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.NEQ, k, v));
-            MapUtils.toOtherKey(neqMap, newKey(ConditionEnum.NEQ));
+            MapUtils.aliasKey(neqMap, newKey(ConditionEnum.NEQ));
             conditionMap.putAll(neqMap);
         }
         if (inMap != null) {
             inMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.IN, k, v));
-            MapUtils.toOtherKey(inMap, newKey(ConditionEnum.IN));
+            MapUtils.aliasKey(inMap, newKey(ConditionEnum.IN));
             conditionMap.putAll(inMap);
         }
         if (ninMap != null) {
             ninMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.NIN, k, v));
-            MapUtils.toOtherKey(ninMap, newKey(ConditionEnum.NIN));
+            MapUtils.aliasKey(ninMap, newKey(ConditionEnum.NIN));
             conditionMap.putAll(ninMap);
         }
         if (ltMap != null) {
             ltMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.LT, k, v));
-            MapUtils.toOtherKey(ltMap, newKey(ConditionEnum.LT));
+            MapUtils.aliasKey(ltMap, newKey(ConditionEnum.LT));
             conditionMap.putAll(ltMap);
         }
         if (gtMap != null) {
             gtMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.GT, k, v));
-            MapUtils.toOtherKey(gtMap, newKey(ConditionEnum.GT));
+            MapUtils.aliasKey(gtMap, newKey(ConditionEnum.GT));
             conditionMap.putAll(gtMap);
         }
         if (lteMap != null) {
             lteMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.LTE, k, v));
-            MapUtils.toOtherKey(lteMap, newKey(ConditionEnum.LTE));
+            MapUtils.aliasKey(lteMap, newKey(ConditionEnum.LTE));
             conditionMap.putAll(lteMap);
         }
         if (gteMap != null) {
             gteMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.GTE, k, v));
-            MapUtils.toOtherKey(gteMap, newKey(ConditionEnum.GTE));
+            MapUtils.aliasKey(gteMap, newKey(ConditionEnum.GTE));
             conditionMap.putAll(gteMap);
         }
         if (orMap != null) {
             orMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.OR, k, v));
-            MapUtils.toOtherKey(orMap, newKey(ConditionEnum.OR));
+            MapUtils.aliasKey(orMap, newKey(ConditionEnum.OR));
             conditionMap.putAll(orMap);
         }
         if (likeMap != null) {
             likeMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.LIKE, k, v));
-            MapUtils.toOtherKey(likeMap, newKey(ConditionEnum.LIKE));
+            MapUtils.aliasKey(likeMap, newKey(ConditionEnum.LIKE));
             conditionMap.putAll(likeMap);
         }
         if (nullMap != null) {
             nullMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.NULL, k, v));
-            MapUtils.toOtherKey(nullMap, newKey(ConditionEnum.NULL));
+            MapUtils.aliasKey(nullMap, newKey(ConditionEnum.NULL));
             conditionMap.putAll(nullMap);
         }
         return sqlBuilder.toString();
     }
 
     /**
-     * 构建SQL语法
+     * 构建SQL语句
      */
     private void sqlBuilder(StringBuilder sqlBuilder, ConditionEnum conditionEnum, String k, Object v) {
         if (conditionEnum == ConditionEnum.OR) {

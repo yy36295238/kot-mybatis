@@ -3,9 +3,7 @@ package com.kot.kotmybatis.service;
 import com.kot.kotmybatis.common.Page;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public interface MapperService<T> extends BaseMapperManager<T> {
 
@@ -25,24 +23,14 @@ public interface MapperService<T> extends BaseMapperManager<T> {
 
     List<T> list(T entity);
 
-    List<T> selectBatchIds(Collection<? extends Serializable> ids);
-
-    List<T> selectByMap(Map<String, Object> columnMap);
-
-    Integer selectCount(T entity);
+    Integer count(T entity);
 
     Page<T> selectPage(Page<T> page, T entity);
 
     /**
      * 删除操作
      */
-    int deleteById(Serializable id);
-
-    int deleteByMap(Map<String, Object> columnMap);
-
-    int deleteByEntity(T entity);
-
-    int deleteBatchIds(Collection<? extends Serializable> idList);
+    int delete(T entity);
 
     /**
      * 更新操作

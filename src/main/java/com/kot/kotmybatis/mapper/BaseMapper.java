@@ -5,8 +5,6 @@ import com.kot.kotmybatis.common.Page;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 
-import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,26 +28,13 @@ public interface BaseMapper<T> {
     @SelectProvider(type = BaseProvider.class)
     List<T> list(@Param(CT.COLUMNS) Set<String> columns, @Param(CT.SQL_CONDITION) String conditionList, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
 
-    List<T> selectBatchIds(Collection<? extends Serializable> ids);
-
-    List<T> selectByMap(Map<String, Object> columnMap);
-
     @SelectProvider(type = BaseProvider.class)
     int count(@Param(CT.SQL_CONDITION) String conditionList, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
 
     @SelectProvider(type = BaseProvider.class)
     List<T> selectPage(@Param(CT.COLUMNS) Set<String> columns, @Param(CT.SQL_CONDITION) String conditionList, @Param("page") Page page, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
 
-    /**
-     * 删除操作
-     */
-    int deleteById(Serializable id);
-
-    int deleteByMap(Map<String, Object> columnMap);
-
-    int deleteByEntity(T entity);
-
-    int deleteBatchIds(Collection<? extends Serializable> ids);
+    int delete(T entity);
 
     /**
      * 更新操作

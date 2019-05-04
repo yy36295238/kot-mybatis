@@ -74,6 +74,9 @@ public class BaseProvider<T> implements ProviderMethodResolver {
         }
     }
 
+    /**
+     * 通用查询构建
+     */
     private SQL selectGeneralSql(Map<String, Object> map, SQL sql, String column) {
         final T entity = (T) map.get(CT.ALIAS_ENTITY);
         final String conditionSql = (String) map.get(CT.SQL_CONDITION);
