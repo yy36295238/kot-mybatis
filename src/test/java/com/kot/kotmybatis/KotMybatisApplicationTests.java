@@ -1,6 +1,5 @@
 package com.kot.kotmybatis;
 
-import com.kot.kotmybatis.common.CT;
 import com.kot.kotmybatis.common.Page;
 import com.kot.kotmybatis.entity.User;
 import com.kot.kotmybatis.service.impl.UserService;
@@ -22,47 +21,33 @@ public class KotMybatisApplicationTests {
     private UserService userService;
 
     @Test
-    public void contextLoads() throws Exception {
-        final User user = userService.newQuery().findById(User.class, 1);
-        System.err.println(user);
-    }
-
-    @Test
     public void findOne() {
         final User user = userService.newQuery()
-                .eq("password", "123")
-                .findOne(new User("test", null));
+                .fields(Arrays.asList("id", "user_name", "password"))
+                .eq("id", 15)
+                .isNull("create_user")
+                .findOne(new User(1));
         System.err.println(user);
     }
 
     @Test
     public void list() {
-        final List<User> admin = userService.newQuery().list(new User("admin", "123"));
-//        final List<User> list = userService.newQuery().list(new User(1));
-        System.err.println(admin);
-//        System.err.println(list);
         final List<User> list = userService.newQuery()
+                .fields(Arrays.asList("user_name", "password"))
                 .eq("user_name", "test")
                 .eq("id", 2)
                 .eq("password", "123")
-                .list(new User());
+                .list(new User(1));
         System.err.println(list);
     }
 
     @Test
-    public void in() {
-        final List<User> list = userService.newQuery()
-                .in("id", Arrays.asList(1, 2, 3))
-                .list(new User());
-        System.err.println("in: " + list);
-    }
-
-    @Test
     public void page() {
-        final Page<User> page2 = userService.newQuery().selectPage(new Page<>(1, 10, "id,name", CT.DESC), new User("admin", "123"));
-        final Page<User> page3 = userService.newQuery().selectPage(new Page<>(1, 10, "id,name", CT.DESC), new User(1));
-        System.err.println(page2);
-        System.err.println(page3);
+        final Page<User> page = userService.newQuery()
+                .fields(Arrays.asList("user_name", "password"))
+                .between("id", 1, 12)
+                .selectPage(new Page<>(2, 10), new User(1));
+        System.err.println(page);
     }
 
 }

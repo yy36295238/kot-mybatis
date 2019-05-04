@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author YangYu
@@ -24,23 +25,20 @@ public interface BaseMapper<T> {
      * 查询操作
      */
     @SelectProvider(type = BaseProvider.class)
-    T findById(@Param("table") Class<T> clazz, @Param("id") Serializable id);
+    T findOne(@Param(CT.COLUMNS) Set<String> columns, @Param(CT.SQL_CONDITION) String conditionList, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
 
     @SelectProvider(type = BaseProvider.class)
-    T findOne(@Param(CT.SQL_CONDITION) String conditionList, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
-
-    @SelectProvider(type = BaseProvider.class)
-    List<T> list(@Param(CT.SQL_CONDITION) String conditionList, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
+    List<T> list(@Param(CT.COLUMNS) Set<String> columns, @Param(CT.SQL_CONDITION) String conditionList, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
 
     List<T> selectBatchIds(Collection<? extends Serializable> ids);
 
     List<T> selectByMap(Map<String, Object> columnMap);
 
     @SelectProvider(type = BaseProvider.class)
-    int selectCount(@Param(CT.SQL_CONDITION) String conditionList, @Param(CT.ALIAS_ENTITY) T entity);
+    int count(@Param(CT.SQL_CONDITION) String conditionList, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
 
     @SelectProvider(type = BaseProvider.class)
-    List<T> selectPage(@Param(CT.SQL_CONDITION) String conditionList, @Param("page") Page page, @Param(CT.ALIAS_ENTITY) T entity);
+    List<T> selectPage(@Param(CT.COLUMNS) Set<String> columns, @Param(CT.SQL_CONDITION) String conditionList, @Param("page") Page page, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
 
     /**
      * 删除操作

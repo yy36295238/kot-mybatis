@@ -32,7 +32,7 @@ public class KotStringUtils {
 
 
     /**
-     * 截取后缀
+     * 截取后缀 AND 1=1 -> 1=1
      */
     public static String removeFirstAndOr(String oriStr) {
         if (oriStr.startsWith(CT.AND)) {

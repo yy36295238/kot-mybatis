@@ -6,43 +6,40 @@ import com.kot.kotmybatis.common.Page;
 import com.kot.kotmybatis.utils.KotStringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.builder.annotation.ProviderMethodResolver;
+import org.apache.ibatis.jdbc.SQL;
+import org.springframework.util.CollectionUtils;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 public class BaseProvider<T> implements ProviderMethodResolver {
 
     private static final Map<Class, String> tableCache = new HashMap<>();
 
-
-    public String findById(@Param("table") Class<T> clazz, @Param("id") Serializable id) {
-        return "select * from " + tableByClazz(clazz) + " where id = #{id}";
-    }
-
-    public String findOne(Map<String, Object> map) throws IllegalAccessException {
+    public String findOne(Map<String, Object> map) {
         return list(map) + CT.LIMIT_ONE;
     }
 
     public String list(Map<String, Object> map) {
-        final String conditionSql = (String) map.get(CT.SQL_CONDITION);
-        final T entity = (T) map.get(CT.ALIAS_ENTITY);
-        return "select * from " + tableByClazz(entity) + whereBuilder(entity, conditionSql);
+        return selectGeneralSql(map, new SQL(), "*").toString();
     }
 
-    public String selectCount(@Param(CT.SQL_CONDITION) String conditionSql, T entity) {
-        return "select count(*) from " + tableByClazz(entity.getClass()) + whereBuilder(entity, conditionSql);
+    public String count(Map<String, Object> map) {
+        return selectGeneralSql(map, new SQL(), "COUNT(*)").toString();
     }
 
-    public String selectPage(Map<String, Object> map) throws IllegalAccessException {
+    public String selectPage(Map<String, Object> map) {
         final Page page = (Page) map.get("page");
-        final T entity = (T) map.get(CT.ALIAS_ENTITY);
         int pageIndex = (page.getPageIndex() - 1) * page.getPageSize();
-        return "select * from " + tableByClazz(entity.getClass()) + whereBuilder(entity, CT.ALIAS_ENTITY) + CT.ORDER_BY + page.getOrderBy() + CT.SPACE + page.getSort() + CT.LIMIT + pageIndex + CT.SPILT + page.getPageSize();
+        final SQL sql = selectGeneralSql(map, new SQL(), "*");
+        if (StringUtils.isNotBlank(page.getOrderBy())) {
+            sql.ORDER_BY(page.getOrderBy() + CT.SPACE + page.getSort());
+        }
+        return sql.toString() + CT.LIMIT + pageIndex + CT.SPILT + page.getPageSize();
     }
 
     private String whereBuilder(T entity, String conditionSql) {
@@ -56,31 +53,37 @@ public class BaseProvider<T> implements ProviderMethodResolver {
         final int len = whereBuilder.length();
         if (len > 0) {
             // 删除第一个一个`AND`、`OR`
-            condition = CT.WHERE + KotStringUtils.removeFirstAndOr(whereBuilder.toString());
+            condition = KotStringUtils.removeFirstAndOr(whereBuilder.toString());
         }
         return condition;
     }
 
     private static void entitySqlBuilder(StringBuilder whereBuilder, Object entity) {
-        if (!isClass(entity.getClass())) {
-            final Field[] fields = entity.getClass().getDeclaredFields();
-            try {
-                for (Field field : fields) {
-                    field.setAccessible(true);
-                    Object val = field.get(entity);
-                    if (val != null) {
-                        String col = field.getName();
-                        whereBuilder.append(String.format("%s%s=#{%s%s}", KotStringUtils.camel2Underline(col), CT.AND, CT.ALIAS_ENTITY + CT.DOT, col));
-                    }
+        final Field[] fields = entity.getClass().getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Object val = field.get(entity);
+                if (val != null) {
+                    String col = field.getName();
+                    whereBuilder.append(String.format("%s%s=#{%s%s}", CT.AND, KotStringUtils.camel2Underline(col), CT.ALIAS_ENTITY + CT.DOT, col));
                 }
-            } catch (Exception e) {
-                throw new RuntimeException("", e);
             }
+        } catch (Exception e) {
+            throw new RuntimeException("", e);
         }
     }
 
+    private SQL selectGeneralSql(Map<String, Object> map, SQL sql, String column) {
+        final T entity = (T) map.get(CT.ALIAS_ENTITY);
+        final String conditionSql = (String) map.get(CT.SQL_CONDITION);
+        final Set<String> columns = map.containsKey(CT.COLUMNS) ? (Set<String>) map.get(CT.COLUMNS) : null;
+        sql.SELECT(CollectionUtils.isEmpty(columns) ? column : String.join(CT.SPILT, columns));
+        return sql.FROM(tableByClazz(entity)).WHERE(whereBuilder(entity, conditionSql));
+    }
+
     private static String tableByClazz(Object obj) {
-        Class<?> entityClass = isClass(obj.getClass()) ? (Class<?>) obj : obj.getClass();
+        Class<?> entityClass = obj.getClass();
         if (tableCache.containsKey(entityClass)) {
             return tableCache.get(entityClass);
         }
@@ -96,10 +99,5 @@ public class BaseProvider<T> implements ProviderMethodResolver {
         tableCache.put(entityClass, tableName);
         return tableName;
     }
-
-    private static boolean isClass(Class clazz) {
-        return clazz.getSimpleName().equals("Class");
-    }
-
 
 }

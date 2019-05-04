@@ -15,12 +15,6 @@ public interface BaseMapperManager<T> {
 
     MapperService<T> fields(List<String> fields);
 
-    MapperService<T> skip(Integer skip);
-
-    MapperService<T> limit(Integer limit);
-
-    MapperService<T> page(Integer skip, Integer limit);
-
     MapperService<T> orderBy(String... sortKey);
 
     MapperService<T> eq(String key, Object value);

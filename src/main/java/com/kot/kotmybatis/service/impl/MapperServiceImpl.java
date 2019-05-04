@@ -8,6 +8,7 @@ import com.kot.kotmybatis.service.MapperService;
 import com.kot.kotmybatis.utils.KotBeanUtils;
 import com.kot.kotmybatis.utils.KotStringUtils;
 import com.kot.kotmybatis.utils.MapUtils;
+import org.springframework.util.Assert;
 
 import java.io.Serializable;
 import java.util.*;
@@ -28,6 +29,7 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     /**
      * 各种条件集合
      */
+    private Set<String> columns = new HashSet<>();
     private Map<String, Object> eqMap = null;
     private Map<String, Object> neqMap = null;
     private Map<String, Object> inMap = null;
@@ -60,18 +62,13 @@ public class MapperServiceImpl<T> implements MapperService<T> {
     }
 
     @Override
-    public T findById(Class<T> clazz, Serializable id) {
-        return baseMapper.findById(clazz, id);
-    }
-
-    @Override
     public T findOne(T entity) {
-        return baseMapper.findOne(conditionSql(), conditionMap, entity);
+        return baseMapper.findOne(columns, conditionSql(), conditionMap, entity);
     }
 
     @Override
     public List<T> list(T entity) {
-        return baseMapper.list(conditionSql(), conditionMap, entity);
+        return baseMapper.list(columns, conditionSql(), conditionMap, entity);
     }
 
     @Override
@@ -86,14 +83,15 @@ public class MapperServiceImpl<T> implements MapperService<T> {
 
     @Override
     public Integer selectCount(T entity) {
-        return baseMapper.selectCount(conditionSql(), entity);
+        return baseMapper.count(conditionSql(), conditionMap, entity);
     }
 
     @Override
     public Page<T> selectPage(Page<T> page, T entity) {
-        final int count = baseMapper.selectCount(conditionSql(), entity);
+        final String conditionSql = conditionSql();
+        final int count = baseMapper.count(conditionSql, conditionMap, entity);
         if (count > 0) {
-            final List<T> list = baseMapper.selectPage(conditionSql(), page, entity);
+            final List<T> list = baseMapper.selectPage(columns, conditionSql, page, conditionMap, entity);
             page.setData(list);
             page.setTotal(count);
         }
@@ -139,26 +137,14 @@ public class MapperServiceImpl<T> implements MapperService<T> {
      */
     @Override
     public MapperService<T> fields(String field) {
+        Assert.notNull(field, "field is null");
+        columns.add(field);
         return this;
     }
 
     @Override
     public MapperService<T> fields(List<String> fields) {
-        return this;
-    }
-
-    @Override
-    public MapperService<T> skip(Integer skip) {
-        return this;
-    }
-
-    @Override
-    public MapperService<T> limit(Integer limit) {
-        return this;
-    }
-
-    @Override
-    public MapperService<T> page(Integer skip, Integer limit) {
+        columns.addAll(fields);
         return this;
     }
 
