@@ -63,7 +63,7 @@ public class KotMybatisConditionTests {
 
     @Test
     public void or() {
-        final List<User> users = userService.newQuery().or("user_name", "test").eq("id", 1).or("id", 12).list(new User());
+        final List<User> users = userService.newQuery().or("user_name", "test").like("email", "5q8kdo5s2kr5vgewqg@msn.com").list(new User());
         System.err.println(users);
     }
 

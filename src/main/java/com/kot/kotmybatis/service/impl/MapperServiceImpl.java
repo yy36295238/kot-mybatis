@@ -73,7 +73,7 @@ public class MapperServiceImpl<T> implements MapperService<T> {
 
     @Override
     public int delete(T entity) {
-        return baseMapper.delete(entity);
+        return baseMapper.delete(columns, conditionSql(), conditionMap, entity);
     }
 
     @Override
@@ -258,11 +258,6 @@ public class MapperServiceImpl<T> implements MapperService<T> {
             MapUtils.aliasKey(gteMap, newKey(ConditionEnum.GTE));
             conditionMap.putAll(gteMap);
         }
-        if (orMap != null) {
-            orMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.OR, k, v));
-            MapUtils.aliasKey(orMap, newKey(ConditionEnum.OR));
-            conditionMap.putAll(orMap);
-        }
         if (likeMap != null) {
             likeMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.LIKE, k, v));
             MapUtils.aliasKey(likeMap, newKey(ConditionEnum.LIKE));
@@ -272,6 +267,12 @@ public class MapperServiceImpl<T> implements MapperService<T> {
             nullMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.NULL, k, v));
             MapUtils.aliasKey(nullMap, newKey(ConditionEnum.NULL));
             conditionMap.putAll(nullMap);
+        }
+        // 放在最后，否则拼接sql会有问题
+        if (orMap != null) {
+            orMap.forEach((k, v) -> sqlBuilder(sqlBuilder, ConditionEnum.OR, k, v));
+            MapUtils.aliasKey(orMap, newKey(ConditionEnum.OR));
+            conditionMap.putAll(orMap);
         }
         return sqlBuilder.toString();
     }

@@ -2,6 +2,8 @@ package com.kot.kotmybatis.mapper;
 
 import com.kot.kotmybatis.common.CT;
 import com.kot.kotmybatis.common.Page;
+import org.apache.ibatis.annotations.DeleteProvider;
+import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 
@@ -17,6 +19,7 @@ public interface BaseMapper<T> {
     /**
      * 保存操作
      */
+    @InsertProvider(type = BaseProvider.class)
     int insert(T entity);
 
     /**
@@ -34,7 +37,8 @@ public interface BaseMapper<T> {
     @SelectProvider(type = BaseProvider.class)
     List<T> selectPage(@Param(CT.COLUMNS) Set<String> columns, @Param(CT.SQL_CONDITION) String conditionList, @Param("page") Page page, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
 
-    int delete(T entity);
+    @DeleteProvider(type = BaseProvider.class)
+    int delete(@Param(CT.COLUMNS) Set<String> columns, @Param(CT.SQL_CONDITION) String conditionList, @Param(CT.ALIAS_CONDITION) Map<String, Object> conditionMap, @Param(CT.ALIAS_ENTITY) T entity);
 
     /**
      * 更新操作
