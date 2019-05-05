@@ -63,4 +63,16 @@ public class KotMybatisApplicationTests {
         System.err.println(delete);
     }
 
+    @Test
+    public void updateById() {
+        final int update = userService.newUpdate().updateById(User.builder().id(15L).cellPhone("13800138000").build());
+        System.err.println(update);
+    }
+
+    @Test
+    public void update() {
+        final int update = userService.newUpdate().between("id", 13, 15).update(User.builder().password("123").build(), User.builder().userStatus(1).build());
+        System.err.println(update);
+    }
+
 }

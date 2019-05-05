@@ -56,6 +56,7 @@ public class KotBeanUtils {
         if (field == null) {
             return null;
         }
+        field.setAccessible(true);
         return ReflectionUtils.getField(field, bean);
     }
 }

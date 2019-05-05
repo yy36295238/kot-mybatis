@@ -83,7 +83,7 @@ public class MapperServiceImpl<T> implements MapperService<T> {
 
     @Override
     public int update(T setEntity, T whereEntity) {
-        return baseMapper.update(setEntity, whereEntity);
+        return baseMapper.update(columns, conditionSql(), conditionMap, whereEntity, setEntity);
     }
 
     private Map<String, Object> map(Map<String, Object> conditionMap) {

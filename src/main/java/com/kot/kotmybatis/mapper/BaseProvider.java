@@ -3,6 +3,7 @@ package com.kot.kotmybatis.mapper;
 import com.kot.kotmybatis.annotation.TableName;
 import com.kot.kotmybatis.common.CT;
 import com.kot.kotmybatis.common.Page;
+import com.kot.kotmybatis.utils.KotBeanUtils;
 import com.kot.kotmybatis.utils.KotStringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +56,21 @@ public class BaseProvider<T> implements ProviderMethodResolver {
         return new SQL().DELETE_FROM(tableByClazz(entity)).WHERE(whereBuilder).toString();
     }
 
+    public String updateById(T entity) {
+        final Object id = KotBeanUtils.fieldVal("id", entity);
+        Assert.notNull(id, "id is null");
+        return new SQL().UPDATE(tableByClazz(entity)).SET(updateSqlBuilder(entity)).WHERE("id=#{id}").toString();
+    }
+
+    public String update(Map<String, Object> map) {
+        final T whereEntity = (T) map.get(CT.ALIAS_ENTITY);
+        final T setEntity = (T) map.get(CT.SET_ENTITY);
+        final String conditionSql = (String) map.get(CT.SQL_CONDITION);
+        final String whereBuilder = whereBuilder(whereEntity, conditionSql);
+        Assert.hasLength(whereBuilder, "update must be contain where condition");
+        return new SQL().UPDATE(tableByClazz(whereEntity)).SET(updateSqlBuilder(setEntity, CT.SET_ENTITY)).WHERE(whereBuilder).toString();
+    }
+
     private String whereBuilder(T entity, String conditionSql) {
         StringBuilder whereBuilder = new StringBuilder();
         // 实体条件
@@ -87,8 +103,10 @@ public class BaseProvider<T> implements ProviderMethodResolver {
         }
     }
 
+    /**
+     * 插入SQL
+     */
     private static String insertSqlBuilder(Object entity) {
-        // INSERT INTO `kakrot`.`user` (`id`, `name`, `cell_phone`, `email`, `user_name`, `password`, `user_status`, `create_time`, `create_user`, `update_time`) VALUES ('2', '南荣筠', '13300358685', 'vyeuerq4ju446@126.com', 'test', '123', '1', '2018-12-20 07:11:12', '2', '2019-05-03 19:10:53');
         StringBuilder columnsBuilder = new StringBuilder();
         StringBuilder valuesBuilder = new StringBuilder();
         final Field[] fields = entity.getClass().getDeclaredFields();
@@ -105,6 +123,33 @@ public class BaseProvider<T> implements ProviderMethodResolver {
             final String columns = columnsBuilder.deleteCharAt(columnsBuilder.lastIndexOf(",")).toString();
             final String values = valuesBuilder.deleteCharAt(valuesBuilder.lastIndexOf(",")).toString();
             return new SQL().INSERT_INTO(tableByClazz(entity)).INTO_COLUMNS(columns).INTO_VALUES(values).toString();
+        } catch (Exception e) {
+            throw new RuntimeException("", e);
+        }
+    }
+
+    /**
+     * 更新SQL
+     */
+    private static String updateSqlBuilder(Object entity) {
+        return updateSqlBuilder(entity, "");
+    }
+
+    private static String updateSqlBuilder(Object entity, String alias) {
+        StringBuilder columnsBuilder = new StringBuilder();
+        final Field[] fields = entity.getClass().getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Object val = field.get(entity);
+                if (val != null && !"id".equals(field.getName())) {
+                    String column = KotStringUtils.camel2Underline(field.getName());
+                    columnsBuilder.append("`").append(column).append("`").append("=");
+                    String aliasField = StringUtils.isBlank(alias) ? field.getName() : alias + CT.DOT + field.getName();
+                    columnsBuilder.append("#{").append(aliasField).append("}").append(CT.SPILT);
+                }
+            }
+            return columnsBuilder.deleteCharAt(columnsBuilder.lastIndexOf(",")).toString();
         } catch (Exception e) {
             throw new RuntimeException("", e);
         }
