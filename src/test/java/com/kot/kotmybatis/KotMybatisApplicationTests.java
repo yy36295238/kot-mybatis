@@ -29,6 +29,13 @@ public class KotMybatisApplicationTests {
     }
 
     @Test
+    public void save() {
+        final User user = User.builder().id(19L).name("张三1").cellPhone("13800138000").email("13800138000@139.com").userName("zhangsan").password("123").userStatus(1).createUser(1L).build();
+        final int save = userService.newQuery().save(user);
+        System.err.println(save);
+    }
+
+    @Test
     public void findOne() {
         final User user = userService.newQuery()
                 .fields(Arrays.asList("id", "user_name", "password"))
