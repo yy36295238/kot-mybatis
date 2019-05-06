@@ -1,8 +1,9 @@
 package com.kot.kotmybatis;
 
-import com.kot.kotmybatis.common.Page;
 import com.kot.kotmybatis.entity.User;
 import com.kot.kotmybatis.service.impl.UserService;
+import kot.bootstarter.kotmybatis.common.CT;
+import kot.bootstarter.kotmybatis.common.Page;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +52,9 @@ public class KotMybatisApplicationTests {
     @Test
     public void page() {
         final Page<User> page = userService.newQuery()
-                .fields(Arrays.asList("user_name", "password"))
+                .fields(Arrays.asList("id", "user_name", "password"))
                 .between("id", 1, 12)
-                .selectPage(new Page<>(2, 10), User.builder().userStatus(1).build());
+                .selectPage(new Page<>(2, 10, "id", CT.DESC), User.builder().userStatus(1).build());
         System.err.println(page);
     }
 

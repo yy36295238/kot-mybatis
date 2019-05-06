@@ -1,7 +1,7 @@
 package com.kot.kotmybatis.entity;
 
 
-import com.kot.kotmybatis.annotation.TableName;
+import kot.bootstarter.kotmybatis.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
