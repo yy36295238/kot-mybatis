@@ -1,6 +1,6 @@
 package com.kot.kotmybatis.entity;
 
-
+import kot.bootstarter.kotmybatis.annotation.Exist;
 import kot.bootstarter.kotmybatis.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +30,8 @@ public class User {
     private Long createUser;
     private Date createTime;
     private Date updateTime;
+    @Exist(value = false)
+    private String test;
 
     public User(Long id) {
         this.id = id;
