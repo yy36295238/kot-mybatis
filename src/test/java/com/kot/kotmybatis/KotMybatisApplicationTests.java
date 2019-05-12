@@ -1,7 +1,7 @@
 package com.kot.kotmybatis;
 
 import com.kot.kotmybatis.entity.User;
-import com.kot.kotmybatis.service.impl.UserService;
+import com.kot.kotmybatis.service.UserService;
 import kot.bootstarter.kotmybatis.common.CT;
 import kot.bootstarter.kotmybatis.common.Page;
 import org.junit.Test;
@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -23,14 +24,14 @@ public class KotMybatisApplicationTests {
 
     @Test
     public void insert() {
-        final User user = User.builder().name("张三").cellPhone("13800138000").email("13800138000@139.com").userName("zhangsan").password("123").userStatus(1).createUser(1L).build();
+        final User user = User.builder().realName("张三").phone("13800138000").email("13800138000@139.com").userName("zhangsan").password("123").userStatus(1).createUser(1L).build();
         final int insert = userService.newQuery().insert(user);
         System.err.println(insert);
     }
 
     @Test
     public void save() {
-        final User user = User.builder().id(19L).name("张三1").cellPhone("13800138000").email("13800138000@139.com").userName("zhangsan").password("123").userStatus(1).createUser(1L).build();
+        final User user = User.builder().id(19L).realName("张三1").phone("13800138000").email("13800138000@139.com").userName("zhangsan").password("123").userStatus(1).createUser(1L).build();
         final int save = userService.newQuery().save(user);
         System.err.println(save);
     }
@@ -73,7 +74,7 @@ public class KotMybatisApplicationTests {
 
     @Test
     public void updateById() {
-        final int update = userService.newUpdate().updateById(User.builder().id(15L).cellPhone("13800138000").build());
+        final int update = userService.newUpdate().updateById(User.builder().id(15L).phone("13800138000").build());
         System.err.println(update);
     }
 
@@ -82,5 +83,27 @@ public class KotMybatisApplicationTests {
         final int update = userService.newUpdate().between("id", 13, 15).update(User.builder().password("123").build(), User.builder().userStatus(1).build());
         System.err.println(update);
     }
+
+    /**
+     * 自定义mapper方法
+     */
+    @Test
+    public void findByUserName() {
+        final List<User> lisis = userService.findByUserName("lisi");
+        System.err.println(lisis);
+    }
+
+    @Test
+    public void findListByUserNameForMap() {
+        final List<Map<String, Object>> lisis = userService.findListByUserNameForMap("lisi");
+        System.err.println(lisis);
+    }
+
+    @Test
+    public void findByUserNameForMap() {
+        final Map<String, Object> lisi = userService.findByUserNameForMap("lisi");
+        System.err.println(lisi);
+    }
+
 
 }

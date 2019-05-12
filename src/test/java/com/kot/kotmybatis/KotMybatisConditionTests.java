@@ -1,7 +1,7 @@
 package com.kot.kotmybatis;
 
 import com.kot.kotmybatis.entity.User;
-import com.kot.kotmybatis.service.impl.UserService;
+import com.kot.kotmybatis.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
