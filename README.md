@@ -6,7 +6,6 @@ mybatis 样例 工程
 - 2019-05-12 
 > 增加驼峰注解: **@ToCamel**，可以把返回结果为List<Map>和Map类型中的key转成驼峰类型
   
-  ###### AOP中处理
   
   ```java
   
@@ -19,7 +18,9 @@ mybatis 样例 工程
     @Select("select * from user where user_name = #{userName}")
     Map<String, Object> findByUserNameForMap(@Param("userName") String userName);
 }
+```
 
+```java
 // Service
 @Service
 public class UserService extends MapperManagerServiceImpl<User> {
@@ -36,10 +37,10 @@ public class UserService extends MapperManagerServiceImpl<User> {
     public Map<String, Object> findByUserNameForMap(String userName) {
         return userMapper.findByUserNameForMap(userName);
     }
-
-
 }
+```
 
+```java
 // AOP
 @Aspect
 @Component
@@ -65,5 +66,5 @@ public class ToCamelWrapper {
 ```
   #### 结果
 ```
-  {realName=lisi, password=123, userStatus=0, createTime=2019-05-13 04:34:00.0, updateTime=2019-05-13 04:34:26.0, createUser=0, id=1, userName=lisi, activation=0}
+{realName=lisi, password=123, **userStatus**=0, **createTime**=2019-05-13 04:34:00.0, updateTime=2019-05-13 04:34:26.0, createUser=0, id=1, userName=lisi, activation=0}
 ```
