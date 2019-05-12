@@ -6,11 +6,9 @@ mybatis 样例 工程
 - 2019-05-12 
 > 增加驼峰注解: **@ToCamel**，可以把返回结果为List<Map>和Map类型中的key转成驼峰类型
   
-  
-  ```java
-  
-  // Mapper
- public interface UserMapper extends BaseMapper<User> {
+##### Mapper
+```java
+public interface UserMapper extends BaseMapper<User> {
 
     @Select("select * from user where user_name = #{userName}")
     List<Map<String, Object>> findListByUserNameForMap(@Param("userName") String userName);
@@ -19,9 +17,8 @@ mybatis 样例 工程
     Map<String, Object> findByUserNameForMap(@Param("userName") String userName);
 }
 ```
-
+##### Service
 ```java
-// Service
 @Service
 public class UserService extends MapperManagerServiceImpl<User> {
 
@@ -39,9 +36,8 @@ public class UserService extends MapperManagerServiceImpl<User> {
     }
 }
 ```
-
+##### AOP
 ```java
-// AOP
 @Aspect
 @Component
 public class ToCamelWrapper {
@@ -66,5 +62,5 @@ public class ToCamelWrapper {
 ```
   #### 结果
 ```
-{realName=lisi, password=123, **userStatus**=0, **createTime**=2019-05-13 04:34:00.0, updateTime=2019-05-13 04:34:26.0, createUser=0, id=1, userName=lisi, activation=0}
+{realName=lisi, password=123, userStatus=0, createTime=2019-05-13 04:34:00.0, updateTime=2019-05-13 04:34:26.0, createUser=0, id=1, userName=lisi, activation=0}
 ```
