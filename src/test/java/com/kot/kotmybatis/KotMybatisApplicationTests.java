@@ -1,7 +1,7 @@
 package com.kot.kotmybatis;
 
-import com.kot.kotmybatis.entity.User;
-import com.kot.kotmybatis.service.UserService;
+import com.kot.kotmybatis.biz.entity.User;
+import com.kot.kotmybatis.biz.service.UserService;
 import kot.bootstarter.kotmybatis.common.CT;
 import kot.bootstarter.kotmybatis.common.Page;
 import org.junit.Test;
@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,7 +25,7 @@ public class KotMybatisApplicationTests {
     public void insert() {
         final User user = User.builder().realName("张三").phone("13800138000").email("13800138000@139.com").userName("zhangsan").password("123").userStatus(1).createUser(1L).build();
         final int insert = userService.newQuery().insert(user);
-        System.err.println(insert);
+        System.err.println("insert count:" + insert + ",id=" + user.getId());
     }
 
     @Test
@@ -50,7 +49,7 @@ public class KotMybatisApplicationTests {
     public void list() {
         final List<User> list = userService.newQuery()
                 .fields(Arrays.asList("user_name", "password"))
-                .eq("user_name", "test")
+                .eq("user_name", "zhangsan")
                 .eq("id", 2)
                 .eq("password", "123")
                 .list(User.builder().userStatus(1).build());
@@ -68,7 +67,7 @@ public class KotMybatisApplicationTests {
 
     @Test
     public void delete() {
-        final int delete = userService.newUpdate().eq("user_status", 1).gte("id", 17).delete(new User("zhangsan"));
+        final int delete = userService.newUpdate().eq("user_status", 1).gte("id", 17).delete(User.builder().userName("zhangsan").build());
         System.err.println(delete);
     }
 
@@ -87,23 +86,23 @@ public class KotMybatisApplicationTests {
     /**
      * 自定义mapper方法
      */
-    @Test
-    public void findByUserName() {
-        final List<User> lisis = userService.findByUserName("lisi");
-        System.err.println(lisis);
-    }
-
-    @Test
-    public void findListByUserNameForMap() {
-        final List<Map<String, Object>> lisis = userService.findListByUserNameForMap("lisi");
-        System.err.println(lisis);
-    }
-
-    @Test
-    public void findByUserNameForMap() {
-        final Map<String, Object> lisi = userService.findByUserNameForMap("lisi");
-        System.err.println(lisi);
-    }
+//    @Test
+//    public void findByUserName() {
+//        final List<User> lisis = userService.findByUserName("lisi");
+//        System.err.println(lisis);
+//    }
+//
+//    @Test
+//    public void findListByUserNameForMap() {
+//        final List<Map<String, Object>> lisis = userService.findListByUserNameForMap("lisi");
+//        System.err.println(lisis);
+//    }
+//
+//    @Test
+//    public void findByUserNameForMap() {
+//        final Map<String, Object> lisi = userService.findByUserNameForMap("lisi");
+//        System.err.println(lisi);
+//    }
 
 
 }
