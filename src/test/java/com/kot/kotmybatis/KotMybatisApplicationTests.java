@@ -38,6 +38,12 @@ public class KotMybatisApplicationTests {
     }
 
     @Test
+    public void findOneNoWhere() {
+        final User user = userService.newQuery().findOne(new User());
+        System.err.println(user);
+    }
+
+    @Test
     public void findOne() {
         final User user = userService.newQuery()
                 .fields(Arrays.asList("id", "user_name", "password"))
