@@ -66,7 +66,8 @@ public class KotMybatisApplicationTests {
         final Page<User> page = userService.newQuery()
                 .fields(Arrays.asList("id", "user_name", "password"))
                 .orderBy("id desc")
-                .selectPage(new Page<>(2, 10), User.builder().userStatus(1).build());
+                .eq("id",37090)
+                .selectPage(new Page<>(1, 10), User.builder().userStatus(1).build());
         System.err.println(page);
     }
 

@@ -23,9 +23,8 @@
         <dependency>
             <groupId>com.yyself</groupId>
             <artifactId>kotmybatis-spring-boot-starter</artifactId>
-            <version>1.0.0-RELEASE</version>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
