@@ -21,9 +21,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
+            <groupId>com.yyself</groupId>
             <artifactId>kotmybatis-spring-boot-starter</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.0-RELEASE</version>
         </dependency>
 
         <dependency>
