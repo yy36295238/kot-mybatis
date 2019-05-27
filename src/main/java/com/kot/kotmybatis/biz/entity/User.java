@@ -1,5 +1,6 @@
 package com.kot.kotmybatis.biz.entity;
 
+import kot.bootstarter.kotmybatis.annotation.Delete;
 import kot.bootstarter.kotmybatis.annotation.Exist;
 import kot.bootstarter.kotmybatis.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -106,6 +107,7 @@ public class User {
     /**
      * 状态：1=正常
      */
+    @Delete("-1")
     private Integer userStatus;
 
     /**
