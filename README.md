@@ -1,6 +1,9 @@
 # kot-mybatis  
-官方文档：[http://www.yyself.com](http://www.yyself.com)  
-mybatis 样例 工程
+
+### 官方文档
+[http://www.yyself.com](http://www.yyself.com)  
+
+### mybatis 样例工程
 > 依赖项目：[https://github.com/yy36295238/kotmybatis-spring-boot-starter](https://github.com/yy36295238/kotmybatis-spring-boot-starter/)  
 
 ### 更新内容
