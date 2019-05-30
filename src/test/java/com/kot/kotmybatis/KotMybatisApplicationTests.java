@@ -13,8 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -114,23 +114,19 @@ public class KotMybatisApplicationTests {
     /**
      * 自定义mapper方法
      */
-//    @Test
-//    public void findByUserName() {
-//        final List<User> lisis = userService.findByUserName("lisi");
-//        println(lisis);
-//    }
-//
-//    @Test
-//    public void findListByUserNameForMap() {
-//        final List<Map<String, Object>> lisis = userService.findListByUserNameForMap("lisi");
-//        println(lisis);
-//    }
-//
-//    @Test
-//    public void findByUserNameForMap() {
-//        final Map<String, Object> lisi = userService.findByUserNameForMap("lisi");
-//        println(lisi);
-//    }
+    @Test
+    public void listForMap() {
+        final List<Map<String, Object>> list = userService.listForMap();
+        println(list);
+    }
+
+
+    @Test
+    public void findOneForMap() {
+        final Map<String, Object> map = userService.findOneForMap();
+        println(map);
+    }
+
     public static void println(Object obj) {
         System.err.println(JSON.toJSONString(obj));
     }
