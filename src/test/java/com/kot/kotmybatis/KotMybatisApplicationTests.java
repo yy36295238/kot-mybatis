@@ -74,7 +74,7 @@ public class KotMybatisApplicationTests {
     public void list() {
         final List<User> list = userService.newQuery()
                 .fields(Arrays.asList("user_name", "password"))
-                .list(new User());
+                .list(User.builder().password("123").build());
         println(list);
     }
 
