@@ -40,7 +40,7 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void save() {
-        final User user = User.builder().id(43130L).realName("张三1").phone("13800138000").email("13800138000@139.com").userName("zhangsan").password("123").userStatus(1).createUser(1L).build();
+        final User user = User.builder().id(43093L).realName("张三1").phone("13800138000").email("13800138000@139.com").userName("zhangsan").password("123").userStatus(1).createUser(1L).build();
         final int save = userService.newQuery().save(user);
         println(save);
     }
@@ -85,7 +85,7 @@ public class KotMybatisApplicationTests {
     public void page() {
         final Page<User> page = userService.newQuery()
                 .fields(Arrays.asList("id", "user_name", "password"))
-                .eq("user_name", "4VItQVm1zG")
+                .eq("user_name", "zhangsan")
                 .orderBy("id desc")
                 .selectPage(new Page<>(1, 10), User.builder().userStatus(1).build());
         println(page);
@@ -96,7 +96,7 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void delete() {
-        final int delete = userService.newUpdate().eq("user_status", 1).gte("id", 43094L).delete(User.builder().userName("4VItQVm1zG").build());
+        final int delete = userService.newUpdate().delete(User.builder().id(43140L).build());
         println(delete);
     }
 
@@ -105,7 +105,7 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void updateById() {
-        final int update = userService.newUpdate().updateById(User.builder().id(43095L).phone("13800138000").build());
+        final int update = userService.newUpdate().updateById(User.builder().id(43138L).phone("13800138000").build());
         println(update);
     }
 
@@ -114,7 +114,7 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void updateByIdSetNull() {
-        final int update = userService.newUpdate().updateById(User.builder().id(43095L).phone("13800138000").userName("kakrot").password("123").createUser(1L).build(), true);
+        final int update = userService.newUpdate().updateById(User.builder().id(43138L).phone("13800138000").userName("kakrot").password("123").createUser(1L).build(), true);
         println(update);
     }
 
@@ -123,7 +123,7 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void update() {
-        final int update = userService.newUpdate().eq("user_name", "dkyh54I98y").update(User.builder().password("123").build(), new User());
+        final int update = userService.newUpdate().eq("user_name", "B5ScY3151Q").update(User.builder().password("123").build(), new User());
         println(update);
     }
 
@@ -132,7 +132,7 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void updateSetNull() {
-        final int update = userService.newUpdate().eq("user_name", "dkyh54I98y").update(User.builder().userName("kulin").password("123").createUser(2L).build(), new User(), true);
+        final int update = userService.newUpdate().eq("user_name", "B5ScY3151Q").update(User.builder().userName("kulin").password("123").createUser(2L).build(), new User(), true);
         println(update);
     }
 
@@ -157,7 +157,7 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void logicDelete() {
-        final int count = userService.newUpdate().eq("id", 43138L).logicDelete(User.builder().build());
+        final int count = userService.newUpdate().eq("id", 43151L).logicDelete(User.builder().build());
         println("logicDelete count=" + count);
     }
 
