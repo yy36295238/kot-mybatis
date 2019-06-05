@@ -29,8 +29,8 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void insert() {
-        final User user = User.builder().realName(RandomValueUtil.name()).phone(RandomValueUtil.phone()).email(RandomValueUtil.email(1, 20)).userName(RandomValueUtil.nick())
-                .password(RandomValueUtil.password()).userStatus(1).createUser(Long.valueOf(RandomValueUtil.getNum(0, 1000))).build();
+        final User user = User.builder().unionId(RandomValueUtil.password()).realName(RandomValueUtil.name()).phone(RandomValueUtil.phone()).email(RandomValueUtil.email(1, 20)).userName(RandomValueUtil.nick())
+                .password(RandomValueUtil.password()).userStatus(1).createUser(Long.valueOf(RandomValueUtil.getNum(0, 1000))).isDelete(1).build();
         final int insert = userService.newQuery().insert(user);
         println("insert count:" + insert + ",id=" + user.getId());
     }
@@ -60,8 +60,9 @@ public class KotMybatisApplicationTests {
     @Test
     public void findOne() {
         final User user = userService.newQuery()
-                .fields(Arrays.asList("id", "user_name", "password", "email"))
-                .eq("user_name", "v527t8qb70")
+                .fields(Arrays.asList("id", "UNION_ID", "user_name", "password", "email"))
+                .eq("UNION_ID", "62be5fd652aa4ad29168d908f636be61")
+//                .eq("user_name", "v527t8qb70")
                 .orderBy("id desc")
                 .findOne(User.builder().build());
         println(user);
@@ -114,7 +115,7 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void updateByIdSetNull() {
-        final int update = userService.newUpdate().updateById(User.builder().id(43138L).phone("13800138000").userName("kakrot").password("123").createUser(1L).build(), true);
+        final int update = userService.newUpdate().updateById(User.builder().id(43138L).phone("13800138000").userName("kakrot").password("123").createUser(1L).isDelete(1).build(), true);
         println(update);
     }
 
@@ -145,7 +146,7 @@ public class KotMybatisApplicationTests {
         long start = System.currentTimeMillis();
         for (int i = 0; i < 10; i++) {
             list.add(User.builder().realName(RandomValueUtil.name()).userName(RandomValueUtil.nick()).password(RandomValueUtil.password()).phone(RandomValueUtil.phone())
-                    .email(RandomValueUtil.email(1, 10)).userStatus(1).createUser(RandomValueUtil.getLongNum(1, 1000)).build());
+                    .email(RandomValueUtil.email(1, 10)).userStatus(1).createUser(RandomValueUtil.getLongNum(1, 1000)).isDelete(1).build());
         }
         System.out.println("size:" + list.size());
         final int count = userService.newUpdate().batchInsert(list);

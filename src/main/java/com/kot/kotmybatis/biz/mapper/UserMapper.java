@@ -12,10 +12,10 @@ import java.util.Map;
  */
 public interface UserMapper extends BaseMapper<User> {
 
-    @Select("select * from user u inner join user_info ui where u.id=ui.user_id")
+    @Select("select * from t_user u inner join user_info ui where u.id=ui.user_id")
     List<Map<String, Object>> listForMap();
 
-    @Select("select * from user u inner join user_info ui where u.id=ui.user_id limit 1")
+    @Select("select * from t_user u inner join user_info ui where u.id=ui.user_id limit 1")
     Map<String, Object> findOneForMap();
 
 }

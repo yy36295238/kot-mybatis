@@ -1,6 +1,9 @@
 package com.kot.kotmybatis.biz.entity;
 
-import kot.bootstarter.kotmybatis.annotation.*;
+import kot.bootstarter.kotmybatis.annotation.Column;
+import kot.bootstarter.kotmybatis.annotation.Delete;
+import kot.bootstarter.kotmybatis.annotation.ID;
+import kot.bootstarter.kotmybatis.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,13 +18,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@TableName("user")
+@TableName("t_user")
 public class User {
     /**
      * 主键
      */
-    @ID("id")
     @Column("id")
+    @ID("id")
     private Long id;
 
     /**
@@ -33,6 +36,7 @@ public class User {
     /**
      *
      */
+    @Column("UNION_ID")
     private String unionId;
 
     /**
@@ -122,9 +126,15 @@ public class User {
     /**
      * 状态：1=正常
      */
-    @Delete("-1")
     @Column("user_status")
     private Integer userStatus;
+
+    /**
+     * 逻辑删除字段：-1=删除，1=未删除
+     */
+    @Column("is_delete")
+    @Delete("-1")
+    private Integer isDelete;
 
     /**
      * 创建人
@@ -133,18 +143,14 @@ public class User {
     private Long createUser;
 
     /**
-     *
+     * 创建时间
      */
     @Column("create_time")
     private Date createTime;
 
     /**
-     *
+     * 更新时间
      */
     @Column("update_time")
     private Date updateTime;
-
-    @Exist(false)
-    private String test;
-
 }
