@@ -22,26 +22,40 @@ public class KotMybatisConditionTests {
 
     @Test
     public void eq() {
-        final List<User> users = userService.newQuery().eq("user_name", "867KV37tc2").eq("create_user", 876).neq("user_status", -9).list(User.builder().userStatus(1).build());
+        final List<User> users = userService.newQuery().eq("user_name", "N8V3R78nD9").eq("create_user", 793).neq("user_status", -9).list(User.builder().userStatus(1).build());
         println(users);
     }
 
     @Test
     public void eqLambda() {
         final User user = User.builder().userStatus(1).build();
-        final List<User> users = userService.newQuery().eq(user::getUserName, "867KV37tc2").eq("create_user", 876).list(user);
+        final List<User> users = userService.newQuery().eq(user::getUserName, "N8V3R78nD9").eq("create_user", 793).list(user);
         println(users);
     }
 
     @Test
     public void neq() {
-        final List<User> users = userService.newQuery().neq("user_name", "kakrot").list(new User());
+        final List<User> users = userService.newQuery().neq("user_name", "N8V3R78nD9").list(new User());
+        println(users);
+    }
+
+    @Test
+    public void neqLambda() {
+        final User user = new User();
+        final List<User> users = userService.newQuery().neq(user::getUserName, "N8V3R78nD9").list(user);
         println(users);
     }
 
     @Test
     public void in() {
         final List<User> users = userService.newQuery().in("user_name", Arrays.asList("kakrot", "zhangsan")).list(new User());
+        println(users);
+    }
+
+    @Test
+    public void inLambda() {
+        final User user = new User();
+        final List<User> users = userService.newQuery().in(user::getUserName, Arrays.asList("ql9h477JD1", "TPgX813h55")).list(user);
         println(users);
     }
 
