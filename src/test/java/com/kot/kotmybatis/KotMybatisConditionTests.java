@@ -27,6 +27,13 @@ public class KotMybatisConditionTests {
     }
 
     @Test
+    public void eqLambda() {
+        final User user = User.builder().userStatus(1).build();
+        final List<User> users = userService.newQuery().eq(user::getUserName, "867KV37tc2").eq("create_user", 876).list(user);
+        println(users);
+    }
+
+    @Test
     public void neq() {
         final List<User> users = userService.newQuery().neq("user_name", "kakrot").list(new User());
         println(users);
