@@ -54,7 +54,7 @@ public class KotMybatisConditionTests {
 
     @Test
     public void inLambda() {
-        final User user = new User();
+        final User user = User.builder().userStatus(1).build();
         final List<User> users = userService.newQuery().in(user::getUserName, Arrays.asList("ql9h477JD1", "TPgX813h55")).list(user);
         println(users);
     }
@@ -66,20 +66,41 @@ public class KotMybatisConditionTests {
     }
 
     @Test
+    public void ninLambda() {
+        final User user = User.builder().userStatus(1).build();
+        final List<User> users = userService.newQuery().nin(user::getUserName, Arrays.asList("kakrot", "zhangsan")).list(user);
+        println(users);
+    }
+
+    @Test
     public void ltAndGt() {
         final List<User> users = userService.newQuery().lt("id", 43110).gt("id", 43093).list(new User());
         println(users);
     }
 
     @Test
+    public void ltAndGtLambda() {
+        final User user = User.builder().userStatus(1).build();
+        final List<User> users = userService.newQuery().lt(user::getId, 43110L).gt(user::getId, 43093L).list(user);
+        println(users);
+    }
+
+    @Test
     public void lteAndGte() {
-        final List<User> users = userService.newQuery().lte("id", 43110).gte("id", 43093).list(new User());
+        final List<User> users = userService.newQuery().lte("id", 43110L).gte("id", 43093L).list(new User());
+        println(users);
+    }
+
+    @Test
+    public void lteAndGtLambda() {
+        final User user = User.builder().userStatus(1).build();
+        final List<User> users = userService.newQuery().lte(user::getId, 43110L).gte(user::getId, 43093L).list(user);
         println(users);
     }
 
     @Test
     public void between() {
-        final List<User> users = userService.newQuery().between("id", 43093, 43110).list(new User());
+        final List<User> users = userService.newQuery().between("id", 43093L, 43110L).list(new User());
         println(users);
     }
 
@@ -90,14 +111,36 @@ public class KotMybatisConditionTests {
     }
 
     @Test
+    public void orLambda() {
+        final User user = User.builder().userStatus(1).build();
+        final List<User> users = userService.newQuery().eq(user::getId, 43093L).or(user::getUserName, "TPgX813h55").or(user::getEmail, "nd3pbiqu@263.net").list(user);
+        println(users);
+    }
+
+    @Test
     public void like() {
         final List<User> users = userService.newQuery().fields(Arrays.asList("user_name", "id")).eq("user_status", 1).like("user_name", "D1").list(new User());
+        println(users);
+    }
+
+
+    @Test
+    public void likeLambda() {
+        final User user = User.builder().userStatus(1).build();
+        final List<User> users = userService.newQuery().fields(user::getId, user::getUserName).eq(user::getUserStatus, 1).like(user::getUserName, "D1").list(user);
         println(users);
     }
 
     @Test
     public void isNull() {
         final List<User> users = userService.newQuery().eq("id", 43095).isNull("real_name").list(new User());
+        println(users);
+    }
+
+    @Test
+    public void isNullLambda() {
+        final User user = User.builder().userStatus(1).build();
+        final List<User> users = userService.newQuery().isNull(user::getRealName).list(user);
         println(users);
     }
 

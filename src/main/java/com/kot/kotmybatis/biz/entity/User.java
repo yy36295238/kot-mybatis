@@ -48,7 +48,7 @@ public class User {
     /**
      * 登录账号
      */
-    @Column("user_name")
+    @Column(value = "user_name", isLike = true)
     private String userName;
 
     /**
