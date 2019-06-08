@@ -40,7 +40,7 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void save() {
-        final User user = User.builder().id(43093L).realName("张三1").phone("13800138000").email("13800138000@139.com").userName("zhangsan").password("123").userStatus(1).createUser(1L).isDelete(1).build();
+        final User user = User.builder().realName("张三1").phone("13800138000").email("13800138000@139.com").userName("zhangsan").password("123").userStatus(1).createUser(1L).isDelete(1).build();
         final int save = userService.newQuery().save(user);
         println(save);
     }
@@ -50,7 +50,7 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void findOneNoWhere() {
-        final User user = userService.newQuery().orderBy("id desc").findOne(new User());
+        final User user = userService.newQuery().orderByIdDesc().findOne(new User());
         println(user);
     }
 
@@ -59,12 +59,13 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void findOne() {
-        final User user = User.builder().userName("A7").userStatus(1).build();
+        final User user = User.builder().userName("A7").realName("林").userStatus(1).build();
         final User result = userService.newQuery()
-                .fields(user::getId, user::getPassword, user::getUnionId)
+                .fields(user::getId, user::getUserName, user::getPassword, user::getUnionId)
                 .eq(user::getId, 43175L)
                 .eq("UNION_ID", "c4f07e742cae46428e76421e33f24d10")
                 .orderBy("id desc")
+                .activeLike()
                 .findOne(user);
         println(result);
     }
@@ -81,14 +82,22 @@ public class KotMybatisApplicationTests {
     }
 
     /**
+     * 统计
+     */
+    @Test
+    public void count() {
+        final int count = userService.newQuery().count(new User());
+        println(count);
+    }
+
+    /**
      * 分页查询
      */
     @Test
     public void page() {
         final Page<User> page = userService.newQuery()
                 .fields(Arrays.asList("id", "user_name", "password"))
-                .eq("user_name", "zhangsan")
-                .orderBy("id desc")
+                .orderByIdDesc()
                 .selectPage(new Page<>(1, 10), User.builder().userStatus(1).build());
         println(page);
     }
@@ -116,7 +125,7 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void updateByIdSetNull() {
-        final int update = userService.newUpdate().updateById(User.builder().id(43115L).phone("13800138000").userName("kakrot").password("123").createUser(1L).isDelete(1).build(), true);
+        final int update = userService.newUpdate().updateById(User.builder().id(43115L).realName("张三").phone("13800138000").userName("kakrot").password("123").createUser(1L).isDelete(1).build(), true);
         println(update);
     }
 
@@ -125,8 +134,8 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void update() {
-        final User user = new User();
-        final int update = userService.newUpdate().eq(user::getUserName, "D6214r3ZZX").update(User.builder().password("123").build(), user);
+        final User user = User.builder().realName("兴").build();
+        final int update = userService.newUpdate().eq(user::getUserName, "S16kKq6A5F").activeLike().update(User.builder().password("123").build(), user);
         println(update);
     }
 
@@ -135,8 +144,8 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void updateSetNull() {
-        final User user = new User();
-        final int update = userService.newUpdate().eq(user::getUserName, "D6214r3ZZX").update(User.builder().userName("kulin").password("123").createUser(2L).isDelete(1).build(), user, true);
+        final User user = User.builder().realName("兴").build();
+        final int update = userService.newUpdate().activeLike().eq(user::getUserName, "S16kKq6A5F").update(User.builder().realName("于兴1").userName("kulin").password("123").createUser(2L).isDelete(1).build(), user, true);
         println(update);
     }
 
@@ -161,9 +170,21 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void logicDelete() {
-        final User user = User.builder().build();
-        final int count = userService.newUpdate().eq(user::getId, 43110L).logicDelete(user);
-        println("logicDelete count=" + count);
+        final User user = User.builder().realName("衡").build();
+        final int count = userService.newUpdate().activeLike()
+                .eq(user::getId, 43181L).logicDelete(user);
+        println("logicDelete count", count);
+    }
+
+
+    /**
+     * 数据库字段值是否已存在
+     */
+    @Test
+    public void columnExist() {
+        final User user = User.builder().openId("wx123").userName("51Ii00s0s8").realName("福").build();
+        final Map<String, Object> columnExist = userService.newQuery().columnExist(user);
+        println("columnExist", columnExist);
     }
 
 
@@ -186,7 +207,11 @@ public class KotMybatisApplicationTests {
     }
 
     public static void println(Object obj) {
-        System.err.println(JSON.toJSONString(obj));
+        println("", obj);
+    }
+
+    public static void println(String prefix, Object obj) {
+        System.err.println(prefix + ": " + JSON.toJSONString(obj));
     }
 
 

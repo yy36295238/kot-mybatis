@@ -30,7 +30,7 @@ public class User {
     /**
      * 用户id
      */
-    @Column("open_id")
+    @Column(value = "open_id", unique = true)
     private String openId;
 
     /**
@@ -42,13 +42,13 @@ public class User {
     /**
      * 真实姓名
      */
-    @Column("real_name")
+    @Column(value = "real_name", isLike = true, unique = true)
     private String realName;
 
     /**
      * 登录账号
      */
-    @Column(value = "user_name", isLike = true)
+    @Column(value = "user_name", isLike = true, unique = true)
     private String userName;
 
     /**
