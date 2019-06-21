@@ -121,6 +121,30 @@ public class KotMybatisApplicationTests {
     }
 
     /**
+     * 乐观锁更新ById
+     */
+    @Test
+    public void updateByIdForVersionLock() {
+        final User user = userService.newQuery().findOne(User.builder().id(43188L).build());
+        final int update1 = userService.newUpdate().updateById(User.builder().phone("13900139000").version(user.getVersion()).id(user.getId()).build());
+        final int update2 = userService.newUpdate().updateById(User.builder().phone("13900139000").version(user.getVersion()).id(user.getId()).build());
+        println("乐观锁更新", update1 > 0 ? "成功" : "失败");
+        println("乐观锁更新", update2 > 0 ? "成功" : "失败");
+    }
+
+    /**
+     * 乐观锁更新
+     */
+    @Test
+    public void updateForVersionLock() {
+        final User user = userService.newQuery().findOne(User.builder().id(43188L).build());
+        final int update1 = userService.newUpdate().update(User.builder().phone("13800138000").build(), User.builder().version(user.getVersion()).id(43188L).build());
+        final int update2 = userService.newUpdate().update(User.builder().phone("13800138000").build(), User.builder().version(user.getVersion()).id(43188L).build());
+        println("乐观锁更新", update1 > 0 ? "成功" : "失败");
+        println("乐观锁更新", update2 > 0 ? "成功" : "失败");
+    }
+
+    /**
      * 根据主键更新，更新所有字段
      */
     @Test

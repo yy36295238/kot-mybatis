@@ -130,6 +130,12 @@ public class User {
     private Integer userStatus;
 
     /**
+     * 乐观锁标识
+     */
+    @Column(value = "version", version = true)
+    private Integer version;
+
+    /**
      * 逻辑删除字段：-1=删除，1=未删除
      */
     @Column("is_delete")
