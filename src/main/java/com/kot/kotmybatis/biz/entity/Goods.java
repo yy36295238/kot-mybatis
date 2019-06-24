@@ -39,6 +39,12 @@ public class Goods {
     /**
      *
      */
+    @Column("sold")
+    private Integer sold;
+
+    /**
+     *
+     */
     @Column(value = "version", version = true)
     private Integer version;
 }
