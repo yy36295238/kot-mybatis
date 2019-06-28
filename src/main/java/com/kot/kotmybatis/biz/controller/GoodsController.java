@@ -5,16 +5,12 @@ import com.kot.kotmybatis.biz.entity.Goods;
 import com.kot.kotmybatis.biz.entity.Order;
 import com.kot.kotmybatis.biz.service.IGoodsService;
 import com.kot.kotmybatis.biz.service.IOrderService;
-import com.kot.kotmybatis.biz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class UserController {
-
-    @Autowired
-    private UserService userService;
+public class GoodsController {
 
     @Autowired
     private IGoodsService goodsService;
@@ -30,7 +26,7 @@ public class UserController {
             System.err.println("已售完");
             return "已售完";
         }
-        // 更新库存
+        // 乐观锁更新库存
         final int count = goodsService.newUpdate().updateById(Goods.builder().id(id).version(goods.getVersion()).sold(goods.getSold() + 1).build());
         if (count > 0) {
             // 插入订单

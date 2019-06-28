@@ -43,7 +43,7 @@ public class Goods {
     private Integer sold;
 
     /**
-     *
+     * 乐观锁版本
      */
     @Column(value = "version", version = true)
     private Integer version;
