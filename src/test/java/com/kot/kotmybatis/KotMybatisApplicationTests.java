@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -68,6 +70,15 @@ public class KotMybatisApplicationTests {
                 .activeLike()
                 .findOne(user);
         println(result);
+    }
+
+    /**
+     * 条件查询，关联字段
+     */
+    @Test
+    public void assFindOne() {
+        final User user = userService.newQuery().findOne(User.builder().id(43183L).build());
+        println(user);
     }
 
     /**

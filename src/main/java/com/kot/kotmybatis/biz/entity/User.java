@@ -1,9 +1,6 @@
 package com.kot.kotmybatis.biz.entity;
 
-import kot.bootstarter.kotmybatis.annotation.Column;
-import kot.bootstarter.kotmybatis.annotation.Delete;
-import kot.bootstarter.kotmybatis.annotation.ID;
-import kot.bootstarter.kotmybatis.annotation.TableName;
+import kot.bootstarter.kotmybatis.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -146,6 +143,7 @@ public class User {
      * 创建人
      */
     @Column("create_user")
+    @Related(clazz = User.class, columns = {"user_name.createUserName"})
     private Long createUser;
 
     /**
@@ -159,4 +157,7 @@ public class User {
      */
     @Column("update_time")
     private Date updateTime;
+
+
+    private String createUserName;
 }

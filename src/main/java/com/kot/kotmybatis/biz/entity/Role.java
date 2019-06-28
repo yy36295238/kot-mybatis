@@ -1,6 +1,5 @@
 package com.kot.kotmybatis.biz.entity;
 
-import kot.bootstarter.kotmybatis.annotation.Exist;
 import kot.bootstarter.kotmybatis.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +35,4 @@ public class Role {
    */
   private Integer roleLevel;
 
-  @Exist(value = false)
-  private String test;
 }
