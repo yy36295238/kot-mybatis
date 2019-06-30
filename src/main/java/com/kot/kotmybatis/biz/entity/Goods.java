@@ -25,19 +25,19 @@ public class Goods {
     private Long id;
 
     /**
-     *
+     * 商品名称
      */
     @Column("good_name")
     private String goodName;
 
     /**
-     *
+     * 商品总数
      */
     @Column("num")
     private Integer num;
 
     /**
-     *
+     * 已售数量
      */
     @Column("sold")
     private Integer sold;

@@ -158,6 +158,8 @@ public class User {
     @Column("update_time")
     private Date updateTime;
 
-
+    /**
+     * 创建人用户名
+     */
     private String createUserName;
 }

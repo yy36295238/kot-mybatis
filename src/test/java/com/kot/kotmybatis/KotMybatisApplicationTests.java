@@ -1,8 +1,11 @@
 package com.kot.kotmybatis;
 
 import com.alibaba.fastjson.JSON;
+import com.kot.kotmybatis.biz.entity.Order;
 import com.kot.kotmybatis.biz.entity.User;
+import com.kot.kotmybatis.biz.service.IOrderService;
 import com.kot.kotmybatis.biz.service.UserService;
+import com.kot.kotmybatis.utils.JsonFormatUtil;
 import com.kot.kotmybatis.utils.RandomValueUtil;
 import kot.bootstarter.kotmybatis.common.Page;
 import org.junit.Test;
@@ -25,6 +28,9 @@ public class KotMybatisApplicationTests {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private IOrderService orderService;
 
     /**
      * 插入数据
@@ -86,9 +92,11 @@ public class KotMybatisApplicationTests {
      */
     @Test
     public void list() {
+        final User user = User.builder().password("123").build();
         final List<User> list = userService.newQuery()
-                .fields(Arrays.asList("user_name", "password"))
-                .list(User.builder().password("123").build());
+                .fields(user::getId, user::getUserName, user::getCreateUser)
+                .activeRelated()
+                .list(user);
         println(list);
     }
 
@@ -229,7 +237,7 @@ public class KotMybatisApplicationTests {
     @Test
     public void listForMap() {
         final List<Map<String, Object>> list = userService.listForMap();
-        println(list);
+        println("listForMap", list);
     }
 
     /**
@@ -241,12 +249,21 @@ public class KotMybatisApplicationTests {
         println(map);
     }
 
+    /**
+     * 关联查询
+     */
+    @Test
+    public void relatedQuery() {
+        final List<Order> list = orderService.newQuery().activeRelated().list(new Order());
+        println("orders", list);
+    }
+
     public static void println(Object obj) {
         println("", obj);
     }
 
     public static void println(String prefix, Object obj) {
-        System.err.println(prefix + ": " + JSON.toJSONString(obj));
+        System.err.println(prefix + ": " + JsonFormatUtil.formatJson(JSON.toJSONString(obj)));
     }
 
 
