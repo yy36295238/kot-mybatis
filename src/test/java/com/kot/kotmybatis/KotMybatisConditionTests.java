@@ -1,8 +1,8 @@
 package com.kot.kotmybatis;
 
 import com.alibaba.fastjson.JSON;
-import com.kot.kotmybatis.biz.entity.User;
-import com.kot.kotmybatis.biz.service.UserService;
+import com.kot.kotmybatis.biz.mysql.biz.entity.User;
+import com.kot.kotmybatis.biz.mysql.biz.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
