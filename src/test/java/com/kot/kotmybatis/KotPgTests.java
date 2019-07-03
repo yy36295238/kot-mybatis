@@ -1,6 +1,7 @@
 package com.kot.kotmybatis;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageInfo;
 import com.kot.kotmybatis.biz.pg.biz.entity.Account;
 import com.kot.kotmybatis.biz.pg.biz.service.IAccountService;
 import com.kot.kotmybatis.utils.JsonFormatUtil;
@@ -41,7 +42,7 @@ public class KotPgTests {
     @Test
     public void batchInsert() {
         List<Account> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             list.add(Account.builder().accountName(RandomValueUtil.name()).accountNo(RandomValueUtil.getNum(18)).acctountBankNo(RandomValueUtil.getNum(19)).createTime(new Date()).updateTime(new Date()).isDelete(0).build());
         }
         System.out.println("size:" + list.size());
@@ -55,7 +56,7 @@ public class KotPgTests {
     @Test
     public void list() {
         final List<Account> list = accountService.newQuery().list(new Account());
-        println("list:", list);
+        println("list" + ",size=" + list.size(), list);
     }
 
     /**
@@ -63,7 +64,7 @@ public class KotPgTests {
      */
     @Test
     public void page() {
-        final Page<Account> page = accountService.newQuery().selectPage(new Page<>(1, 10), new Account());
+        final PageInfo<Account> page = accountService.newQuery().selectPage(new Page<>(1, 10), new Account());
         println("page:", page);
     }
 

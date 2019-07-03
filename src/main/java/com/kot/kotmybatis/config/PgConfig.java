@@ -2,7 +2,6 @@ package com.kot.kotmybatis.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -25,10 +24,7 @@ public class PgConfig extends DbConfig {
 
     @Bean(name = "pgSqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory(@Qualifier("pgDataSource") DataSource dataSource) throws Exception {
-        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
-        bean.setDataSource(dataSource);
-        bean.setConfiguration(super.configuration());
-        return bean.getObject();
+        return super.baseSqlSessionFactory(dataSource);
     }
 
     @Bean(name = "pgTransactionManager")

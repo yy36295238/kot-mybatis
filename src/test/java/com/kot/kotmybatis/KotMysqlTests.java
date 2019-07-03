@@ -1,6 +1,7 @@
 package com.kot.kotmybatis;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageInfo;
 import com.kot.kotmybatis.biz.mysql.biz.entity.Order;
 import com.kot.kotmybatis.biz.mysql.biz.entity.User;
 import com.kot.kotmybatis.biz.mysql.biz.service.IOrderService;
@@ -112,7 +113,7 @@ public class KotMysqlTests {
      */
     @Test
     public void page() {
-        final Page<User> page = userService.newQuery()
+        final PageInfo<User> page = userService.newQuery()
                 .fields(Arrays.asList("id", "user_name", "password"))
                 .orderByIdDesc()
                 .selectPage(new Page<>(1, 10), User.builder().userStatus(1).build());
