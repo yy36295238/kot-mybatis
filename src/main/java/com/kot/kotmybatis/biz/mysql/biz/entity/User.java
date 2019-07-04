@@ -21,7 +21,7 @@ public class User {
      * 主键
      */
     @Column("id")
-    @ID("id")
+    @ID(value = "id", idType = ID.IdType.CUSTOMIZE)
     private Long id;
 
     /**

@@ -43,6 +43,20 @@ public class KotMysqlTests {
     }
 
     /**
+     * 批量插入
+     */
+    @Test
+    public void batchInsert() {
+        List<User> list = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            list.add(User.builder().realName(RandomValueUtil.name()).userName(RandomValueUtil.nick()).password(RandomValueUtil.password()).phone(RandomValueUtil.phone())
+                    .email(RandomValueUtil.email(1, 10)).userStatus(1).createUser(RandomValueUtil.getLongNum(1, 1000)).isDelete(1).build());
+        }
+        final int count = userService.newUpdate().batchInsert(list);
+        list.forEach(System.out::println);
+    }
+
+    /**
      * 有主键id更新数据，无主键id插入数据
      */
     @Test
@@ -191,21 +205,6 @@ public class KotMysqlTests {
         println(update);
     }
 
-    /**
-     * 批量插入
-     */
-    @Test
-    public void batchInsert() {
-        List<User> list = new ArrayList<>();
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 2; i++) {
-            list.add(User.builder().realName(RandomValueUtil.name()).userName(RandomValueUtil.nick()).password(RandomValueUtil.password()).phone(RandomValueUtil.phone())
-                    .email(RandomValueUtil.email(1, 10)).userStatus(1).createUser(RandomValueUtil.getLongNum(1, 1000)).isDelete(1).build());
-        }
-        System.out.println("size:" + list.size());
-        final int count = userService.newUpdate().batchInsert(list);
-        println(count + " cost time:" + (System.currentTimeMillis() - start));
-    }
 
     /**
      * 逻辑删除
