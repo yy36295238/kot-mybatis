@@ -23,7 +23,7 @@ public class Account {
      * 主键
      */
     @Column("id")
-    @ID("id")
+    @ID(value = "id", idType = ID.IdType.SNOW_FLAKE)
     private Long id;
 
     /**

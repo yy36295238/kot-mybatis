@@ -1,5 +1,6 @@
 package com.kot.kotmybatis;
 
+import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.kot.kotmybatis.biz.pg.biz.entity.Account;
@@ -75,6 +76,7 @@ public class KotPgTests {
     public static void println(String prefix, Object obj) {
         System.err.println(prefix + ": " + JsonFormatUtil.formatJson(JSON.toJSONString(obj)));
     }
+
 
 
 }
