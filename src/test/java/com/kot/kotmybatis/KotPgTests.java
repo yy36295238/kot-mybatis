@@ -1,5 +1,6 @@
 package com.kot.kotmybatis;
 
+import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
@@ -8,6 +9,8 @@ import com.kot.kotmybatis.biz.pg.biz.service.IAccountService;
 import com.kot.kotmybatis.utils.JsonFormatUtil;
 import com.kot.kotmybatis.utils.RandomValueUtil;
 import kot.bootstarter.kotmybatis.common.Page;
+import kot.bootstarter.kotmybatis.common.id.IdGenerator;
+import kot.bootstarter.kotmybatis.common.id.IdGeneratorBySnowflakeImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +80,15 @@ public class KotPgTests {
         System.err.println(prefix + ": " + JsonFormatUtil.formatJson(JSON.toJSONString(obj)));
     }
 
+    public static void main(String[] args) {
+        System.out.println(new Snowflake(1, 1, true).nextId());
+        System.out.println(IdUtil.getSnowflake(1, 1).nextId());
+        final IdGenerator idGenerator = new IdGeneratorBySnowflakeImpl();
+        final IdGenerator idGenerator1 = new IdGeneratorBySnowflakeImpl();
+        System.out.println(idGenerator.gen());
+        System.out.println(idGenerator.gen());
+        System.out.println(idGenerator1.gen());
+    }
 
 
 }
