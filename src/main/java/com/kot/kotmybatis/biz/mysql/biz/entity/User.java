@@ -21,7 +21,7 @@ public class User {
      * 主键
      */
     @Column("id")
-    @ID(value = "id", idType = ID.IdType.CUSTOMIZE)
+    @ID(value = "id")
     private Long id;
 
     /**
@@ -33,7 +33,7 @@ public class User {
     /**
      *
      */
-    @Column("UNION_ID")
+    @Column(value = "UNION_ID", keyWords = "`")
     private String unionId;
 
     /**
