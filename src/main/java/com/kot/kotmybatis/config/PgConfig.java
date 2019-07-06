@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @MapperScan(basePackages = "com.kot.kotmybatis.biz.pg.biz.mapper", sqlSessionFactoryRef = "pgSqlSessionFactory")
-public class PgConfig extends DbConfig {
+public class PgConfig extends BaseDbConfig {
 
     @Bean(name = "pgDataSource")
     @ConfigurationProperties(prefix = "pg.spring.datasource")

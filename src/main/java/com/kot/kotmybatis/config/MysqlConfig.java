@@ -1,7 +1,6 @@
 package com.kot.kotmybatis.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import lombok.Builder;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,7 +15,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @MapperScan(value = "com.kot.kotmybatis.biz.mysql.biz.mapper", sqlSessionFactoryRef = "sqlSessionFactory")
-public class MysqlConfig extends DbConfig {
+public class MysqlConfig extends BaseDbConfig {
 
     @Bean(name = "dataSource")
     @ConfigurationProperties(prefix = "spring.datasource")
