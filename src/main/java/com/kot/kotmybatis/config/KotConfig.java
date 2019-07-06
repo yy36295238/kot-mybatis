@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class KotConfig {
 
     @Bean("idGenerator")
-    public IdGenerator myIdGenerator() {
+    public IdGenerator idGenerator() {
         return RandomUtils::nextLong;
     }
 }

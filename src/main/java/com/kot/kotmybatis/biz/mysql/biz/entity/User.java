@@ -21,7 +21,7 @@ public class User {
      * 主键
      */
     @Column("id")
-    @ID(value = "id")
+    @ID(value = "id", idType = ID.IdType.SNOW_FLAKE)
     private Long id;
 
     /**

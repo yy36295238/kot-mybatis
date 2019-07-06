@@ -38,7 +38,7 @@ public class Order {
      * 用户id
      */
     @Column("user_id")
-    @Related(clazz = User.class, columns = {"user_name.userName", "real_name.realName"}, pkColumn = "id")
+    @Related(clazz = User.class, columns = {"user_name.userName", "real_name.realName"}, fkColumn = "id")
     private Long userId;
 
     /**
