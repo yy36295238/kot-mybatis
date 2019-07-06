@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.kot.kotmybatis.biz.mysql.biz.entity.Order;
 import com.kot.kotmybatis.biz.mysql.biz.entity.User;
+import com.kot.kotmybatis.biz.mysql.biz.mapper.UserMapper;
 import com.kot.kotmybatis.biz.mysql.biz.service.IOrderService;
 import com.kot.kotmybatis.biz.mysql.biz.service.UserService;
 import com.kot.kotmybatis.utils.JsonFormatUtil;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -29,17 +31,40 @@ public class KotMysqlTests {
     private UserService userService;
 
     @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     private IOrderService orderService;
+
+    @Test
+    public void myInsert() {
+        final User user = User.builder().unionId(RandomValueUtil.password()).realName(RandomValueUtil.name()).phone(RandomValueUtil.phone()).email(RandomValueUtil.email(1, 20)).userName(RandomValueUtil.nick())
+                .password(RandomValueUtil.password()).userStatus(1).createUser(RandomValueUtil.getLongNum(0, 1000)).isDelete(1).build();
+        userMapper.myInsert(user);
+    }
 
     /**
      * 插入数据
      */
     @Test
-    public void insert() {
-        final User user = User.builder().unionId(RandomValueUtil.password()).realName(RandomValueUtil.name()).phone(RandomValueUtil.phone()).email(RandomValueUtil.email(1, 20)).userName(RandomValueUtil.nick())
-                .password(RandomValueUtil.password()).userStatus(1).createUser(Long.valueOf(RandomValueUtil.getNum(0, 1000))).isDelete(1).build();
-        final int insert = userService.newQuery().insert(user);
-        println("insert count:" + insert + ",id=" + user.getId());
+    public void insert() throws InterruptedException {
+
+        int count = 2;
+        CountDownLatch latch = new CountDownLatch(count);
+        List<Long> ids = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            new Thread(() -> {
+                final User user = User.builder().unionId(RandomValueUtil.password()).realName(RandomValueUtil.name()).phone(RandomValueUtil.phone()).email(RandomValueUtil.email(1, 20)).userName(RandomValueUtil.nick())
+                        .password(RandomValueUtil.password()).userStatus(1).createUser(RandomValueUtil.getLongNum(0, 1000)).isDelete(1).build();
+                userService.newQuery().insert(user);
+                latch.countDown();
+                ids.add(user.getId());
+            }).start();
+        }
+        latch.await();
+        ids.stream().sorted().forEach(System.out::println);
+
+        Thread.sleep(5000);
     }
 
     /**
