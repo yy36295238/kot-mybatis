@@ -23,7 +23,7 @@ public class Account {
      * 主键
      */
     @Column("id")
-    @ID("id")
+    @ID(value = "id")
     private Long id;
 
     /**

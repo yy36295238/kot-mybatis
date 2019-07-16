@@ -13,4 +13,6 @@ public interface UserService extends MapperManagerService<User> {
     List<Map<String, Object>> listForMap();
 
     Map<String, Object> findOneForMap();
+
+    int myInsert(User user);
 }

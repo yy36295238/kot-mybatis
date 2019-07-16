@@ -27,4 +27,9 @@ public class UserServiceImpl extends MapperManagerServiceImpl<User> implements U
     public Map<String, Object> findOneForMap() {
         return userMapper.findOneForMap();
     }
+
+    @Override public int myInsert(User user) {
+
+        return userMapper.myInsert(user);
+    }
 }

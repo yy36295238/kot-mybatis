@@ -6,8 +6,6 @@ import com.kot.kotmybatis.biz.mysql.biz.entity.Order;
 import com.kot.kotmybatis.biz.mysql.biz.entity.User;
 import com.kot.kotmybatis.biz.mysql.biz.service.IOrderService;
 import com.kot.kotmybatis.biz.mysql.biz.service.UserService;
-import com.kot.kotmybatis.utils.JsonFormatUtil;
-import com.kot.kotmybatis.utils.RandomValueUtil;
 import kot.bootstarter.kotmybatis.common.Page;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -31,15 +30,51 @@ public class KotMysqlTests {
     @Autowired
     private IOrderService orderService;
 
+    @Test
+    public void myInsert() {
+        final User user = User.builder().unionId(com.kot.kotmybatis.utils.RandomValueUtil.password()).realName(com.kot.kotmybatis.utils.RandomValueUtil.name()).phone(com.kot.kotmybatis.utils.RandomValueUtil.phone()).email(com.kot.kotmybatis.utils.RandomValueUtil.email(1, 20)).userName(com.kot.kotmybatis.utils.RandomValueUtil.nick())
+                .password(com.kot.kotmybatis.utils.RandomValueUtil.password()).userStatus(1).createUser(com.kot.kotmybatis.utils.RandomValueUtil.getLongNum(0, 1000)).isDelete(1).build();
+        userService.myInsert(user);
+        println("myInsert", user);
+    }
+
     /**
      * 插入数据
      */
     @Test
-    public void insert() {
-        final User user = User.builder().unionId(RandomValueUtil.password()).realName(RandomValueUtil.name()).phone(RandomValueUtil.phone()).email(RandomValueUtil.email(1, 20)).userName(RandomValueUtil.nick())
-                .password(RandomValueUtil.password()).userStatus(1).createUser(Long.valueOf(RandomValueUtil.getNum(0, 1000))).isDelete(1).key("mykey").build();
-        final int insert = userService.newQuery().insert(user);
-        println("insert count:" + insert + ",id=" + user.getId());
+    public void insert() throws InterruptedException {
+
+        int count = 2;
+        CountDownLatch latch = new CountDownLatch(count);
+        List<Long> ids = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            new Thread(() -> {
+                final User user = User.builder().unionId(com.kot.kotmybatis.utils.RandomValueUtil.password()).realName(com.kot.kotmybatis.utils.RandomValueUtil.name()).phone(com.kot.kotmybatis.utils.RandomValueUtil.phone()).email(com.kot.kotmybatis.utils.RandomValueUtil.email(1, 20)).userName(com.kot.kotmybatis.utils.RandomValueUtil.nick())
+                        .password(com.kot.kotmybatis.utils.RandomValueUtil.password()).userStatus(1).createUser(com.kot.kotmybatis.utils.RandomValueUtil.getLongNum(0, 1000)).isDelete(1).build();
+                userService.newQuery().insert(user);
+                latch.countDown();
+                ids.add(user.getId());
+                println("insert", user);
+            }).start();
+        }
+        latch.await();
+        ids.stream().sorted().forEach(System.out::println);
+        Thread.sleep(5000);
+    }
+
+    /**
+     * 批量插入
+     */
+    @Test
+    public void batchInsert() {
+        List<User> list = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            list.add(User.builder().realName(com.kot.kotmybatis.utils.RandomValueUtil.name()).userName(com.kot.kotmybatis.utils.RandomValueUtil.nick()).password(com.kot.kotmybatis.utils.RandomValueUtil.password()).phone(com.kot.kotmybatis.utils.RandomValueUtil.phone())
+                    .email(com.kot.kotmybatis.utils.RandomValueUtil.email(1, 10)).userStatus(1).createUser(com.kot.kotmybatis.utils.RandomValueUtil.getLongNum(1, 1000)).isDelete(1).build());
+        }
+        final int count = userService.newUpdate().batchInsert(list);
+        println("batchInsert", count);
+        list.forEach(System.out::println);
     }
 
     /**
@@ -49,7 +84,7 @@ public class KotMysqlTests {
     public void save() {
         final User user = User.builder().realName("张三1").phone("13800138000").email("13800138000@139.com").userName("zhangsan").password("123").userStatus(1).createUser(1L).isDelete(1).build();
         final int save = userService.newQuery().save(user);
-        println(save);
+        println("save", save);
     }
 
     /**
@@ -58,7 +93,7 @@ public class KotMysqlTests {
     @Test
     public void findOneNoWhere() {
         final User user = userService.newQuery().orderByIdDesc().findOne(new User());
-        println(user);
+        println("findOneNoWhere", user);
     }
 
     /**
@@ -72,19 +107,9 @@ public class KotMysqlTests {
                 .eq(user::getId, 43175L)
                 .eq("UNION_ID", "c4f07e742cae46428e76421e33f24d10")
                 .orderBy("id desc")
-                .eq("key", "mykey")
                 .activeLike()
                 .findOne(user);
-        println(result);
-    }
-
-    /**
-     * 条件查询，关联字段
-     */
-    @Test
-    public void relatedFindOne() {
-        final User user = userService.newQuery().findOne(User.builder().id(43183L).build());
-        println(user);
+        println("findOne", result);
     }
 
     /**
@@ -97,7 +122,7 @@ public class KotMysqlTests {
                 .fields(user::getId, user::getUserName, user::getCreateUser, user::getRealName)
 //                .activeRelated()
                 .list(user);
-        println(list);
+        println("list", list);
     }
 
     /**
@@ -106,7 +131,7 @@ public class KotMysqlTests {
     @Test
     public void count() {
         final int count = userService.newQuery().count(new User());
-        println(count);
+        println("count", count);
     }
 
     /**
@@ -118,7 +143,7 @@ public class KotMysqlTests {
                 .fields(Arrays.asList("id", "user_name", "password"))
                 .orderByIdDesc()
                 .selectPage(new Page<>(1, 10), User.builder().userStatus(1).build());
-        println(page);
+        println("page", page);
     }
 
     /**
@@ -127,7 +152,7 @@ public class KotMysqlTests {
     @Test
     public void delete() {
         final int delete = userService.newUpdate().delete(User.builder().id(100000L).build());
-        println(delete);
+        println("delete", delete);
     }
 
     /**
@@ -136,7 +161,7 @@ public class KotMysqlTests {
     @Test
     public void updateById() {
         final int update = userService.newUpdate().updateById(User.builder().id(43115L).phone("13800138000").build());
-        println(update);
+        println("updateById", update);
     }
 
     /**
@@ -147,8 +172,8 @@ public class KotMysqlTests {
         final User user = userService.newQuery().findOne(User.builder().id(43188L).build());
         final int update1 = userService.newUpdate().updateById(User.builder().phone("13900139000").version(user.getVersion()).id(user.getId()).build());
         final int update2 = userService.newUpdate().updateById(User.builder().phone("13900139000").version(user.getVersion()).id(user.getId()).build());
-        println("乐观锁更新", update1 > 0 ? "成功" : "失败");
-        println("乐观锁更新", update2 > 0 ? "成功" : "失败");
+        println("updateByIdForVersionLock", update1 > 0 ? "成功" : "失败");
+        println("updateByIdForVersionLock", update2 > 0 ? "成功" : "失败");
     }
 
     /**
@@ -159,8 +184,8 @@ public class KotMysqlTests {
         final User user = userService.newQuery().findOne(User.builder().id(43188L).build());
         final int update1 = userService.newUpdate().update(User.builder().phone("13800138000").build(), User.builder().version(user.getVersion()).id(43188L).build());
         final int update2 = userService.newUpdate().update(User.builder().phone("13800138000").build(), User.builder().version(user.getVersion()).id(43188L).build());
-        println("乐观锁更新", update1 > 0 ? "成功" : "失败");
-        println("乐观锁更新", update2 > 0 ? "成功" : "失败");
+        println("updateForVersionLock", update1 > 0 ? "成功" : "失败");
+        println("updateForVersionLock", update2 > 0 ? "成功" : "失败");
     }
 
     /**
@@ -169,7 +194,7 @@ public class KotMysqlTests {
     @Test
     public void updateByIdSetNull() {
         final int update = userService.newUpdate().updateById(User.builder().id(43114L).realName("张三").phone("13800138000").userName("kakrot").password("123").createUser(1L).isDelete(1).build(), true);
-        println(update);
+        println("updateByIdSetNull", update);
     }
 
     /**
@@ -179,7 +204,7 @@ public class KotMysqlTests {
     public void update() {
         final User user = User.builder().realName("兴").build();
         final int update = userService.newUpdate().eq(user::getUserName, "S16kKq6A5F").activeLike().update(User.builder().password("123").build(), user);
-        println(update);
+        println("update", update);
     }
 
     /**
@@ -189,24 +214,9 @@ public class KotMysqlTests {
     public void updateSetNull() {
         final User user = User.builder().realName("兴").build();
         final int update = userService.newUpdate().activeLike().eq(user::getUserName, "kulin").update(User.builder().realName("于兴2").userName("kulin").password("123").createUser(2L).isDelete(1).build(), user, true);
-        println(update);
+        println("updateSetNull", update);
     }
 
-    /**
-     * 批量插入
-     */
-    @Test
-    public void batchInsert() {
-        List<User> list = new ArrayList<>();
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 2; i++) {
-            list.add(User.builder().realName(RandomValueUtil.name()).userName(RandomValueUtil.nick()).password(RandomValueUtil.password()).phone(RandomValueUtil.phone())
-                    .email(RandomValueUtil.email(1, 10)).userStatus(1).createUser(RandomValueUtil.getLongNum(1, 1000)).isDelete(1).build());
-        }
-        System.out.println("size:" + list.size());
-        final int count = userService.newUpdate().batchInsert(list);
-        println(count + " cost time:" + (System.currentTimeMillis() - start));
-    }
 
     /**
      * 逻辑删除
@@ -216,7 +226,7 @@ public class KotMysqlTests {
         final User user = User.builder().realName("衡").build();
         final int count = userService.newUpdate().activeLike()
                 .eq(user::getId, 43181L).logicDelete(user);
-        println("logicDelete count", count);
+        println("logicDelete", count);
     }
 
 
@@ -246,7 +256,7 @@ public class KotMysqlTests {
     @Test
     public void findOneForMap() {
         final Map<String, Object> map = userService.findOneForMap();
-        println(map);
+        println("findOneForMap", map);
     }
 
     /**
@@ -255,7 +265,7 @@ public class KotMysqlTests {
     @Test
     public void relatedQuery() {
         final List<Order> list = orderService.newQuery().activeRelated().list(new Order());
-        println("orders", list);
+        println("relatedQuery", list);
     }
 
     public static void println(Object obj) {
@@ -263,7 +273,7 @@ public class KotMysqlTests {
     }
 
     public static void println(String prefix, Object obj) {
-        System.err.println(prefix + ": " + JsonFormatUtil.formatJson(JSON.toJSONString(obj)));
+        System.err.println(prefix + ": " + com.kot.kotmybatis.utils.JsonFormatUtil.formatJson(JSON.toJSONString(obj)));
     }
 
 
