@@ -147,6 +147,12 @@ public class User {
     private Long createUser;
 
     /**
+     * key 关键字
+     */
+    @Column(value = "key", keyWords = "`")
+    private String key;
+
+    /**
      * 创建时间
      */
     @Column("create_time")

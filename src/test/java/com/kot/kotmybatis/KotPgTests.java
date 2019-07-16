@@ -1,6 +1,7 @@
 package com.kot.kotmybatis;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageInfo;
 import com.kot.kotmybatis.biz.pg.biz.entity.Account;
 import com.kot.kotmybatis.biz.pg.biz.service.IAccountService;
 import com.kot.kotmybatis.utils.JsonFormatUtil;
@@ -63,7 +64,7 @@ public class KotPgTests {
      */
     @Test
     public void page() {
-        final Page<Account> page = accountService.newQuery().selectPage(new Page<>(1, 10), new Account());
+        final PageInfo<Account> page = accountService.newQuery().selectPage(new Page<>(1, 10), new Account());
         println("page:", page);
     }
 

@@ -1,6 +1,7 @@
 package com.kot.kotmybatis;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageInfo;
 import com.kot.kotmybatis.biz.mysql.biz.entity.Order;
 import com.kot.kotmybatis.biz.mysql.biz.entity.User;
 import com.kot.kotmybatis.biz.mysql.biz.service.IOrderService;
@@ -36,7 +37,7 @@ public class KotMysqlTests {
     @Test
     public void insert() {
         final User user = User.builder().unionId(RandomValueUtil.password()).realName(RandomValueUtil.name()).phone(RandomValueUtil.phone()).email(RandomValueUtil.email(1, 20)).userName(RandomValueUtil.nick())
-                .password(RandomValueUtil.password()).userStatus(1).createUser(Long.valueOf(RandomValueUtil.getNum(0, 1000))).isDelete(1).build();
+                .password(RandomValueUtil.password()).userStatus(1).createUser(Long.valueOf(RandomValueUtil.getNum(0, 1000))).isDelete(1).key("mykey").build();
         final int insert = userService.newQuery().insert(user);
         println("insert count:" + insert + ",id=" + user.getId());
     }
@@ -71,6 +72,7 @@ public class KotMysqlTests {
                 .eq(user::getId, 43175L)
                 .eq("UNION_ID", "c4f07e742cae46428e76421e33f24d10")
                 .orderBy("id desc")
+                .eq("key", "mykey")
                 .activeLike()
                 .findOne(user);
         println(result);
@@ -112,7 +114,7 @@ public class KotMysqlTests {
      */
     @Test
     public void page() {
-        final Page<User> page = userService.newQuery()
+        final PageInfo<User> page = userService.newQuery()
                 .fields(Arrays.asList("id", "user_name", "password"))
                 .orderByIdDesc()
                 .selectPage(new Page<>(1, 10), User.builder().userStatus(1).build());
