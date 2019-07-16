@@ -50,7 +50,7 @@ public class KotMysqlTests {
         for (int i = 0; i < count; i++) {
             new Thread(() -> {
                 final User user = User.builder().unionId(com.kot.kotmybatis.utils.RandomValueUtil.password()).realName(com.kot.kotmybatis.utils.RandomValueUtil.name()).phone(com.kot.kotmybatis.utils.RandomValueUtil.phone()).email(com.kot.kotmybatis.utils.RandomValueUtil.email(1, 20)).userName(com.kot.kotmybatis.utils.RandomValueUtil.nick())
-                        .password(com.kot.kotmybatis.utils.RandomValueUtil.password()).userStatus(1).createUser(com.kot.kotmybatis.utils.RandomValueUtil.getLongNum(0, 1000)).isDelete(1).build();
+                        .password(com.kot.kotmybatis.utils.RandomValueUtil.password()).userStatus(1).createUser(com.kot.kotmybatis.utils.RandomValueUtil.getLongNum(0, 1000)).isDelete(1).key("mykey").build();
                 userService.newQuery().insert(user);
                 latch.countDown();
                 ids.add(user.getId());
@@ -70,7 +70,7 @@ public class KotMysqlTests {
         List<User> list = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             list.add(User.builder().realName(com.kot.kotmybatis.utils.RandomValueUtil.name()).userName(com.kot.kotmybatis.utils.RandomValueUtil.nick()).password(com.kot.kotmybatis.utils.RandomValueUtil.password()).phone(com.kot.kotmybatis.utils.RandomValueUtil.phone())
-                    .email(com.kot.kotmybatis.utils.RandomValueUtil.email(1, 10)).userStatus(1).createUser(com.kot.kotmybatis.utils.RandomValueUtil.getLongNum(1, 1000)).isDelete(1).build());
+                    .email(com.kot.kotmybatis.utils.RandomValueUtil.email(1, 10)).userStatus(1).createUser(com.kot.kotmybatis.utils.RandomValueUtil.getLongNum(1, 1000)).isDelete(1).key("mykey").build());
         }
         final int count = userService.newUpdate().batchInsert(list);
         println("batchInsert", count);
@@ -106,6 +106,7 @@ public class KotMysqlTests {
 //                .fields(user::getId, user::getUserName, user::getPassword, user::getUnionId)
                 .eq(user::getId, 43175L)
                 .eq("UNION_ID", "c4f07e742cae46428e76421e33f24d10")
+                .eq("key", "mykey")
                 .orderBy("id desc")
                 .activeLike()
                 .findOne(user);
@@ -160,7 +161,7 @@ public class KotMysqlTests {
      */
     @Test
     public void updateById() {
-        final int update = userService.newUpdate().updateById(User.builder().id(43115L).phone("13800138000").build());
+        final int update = userService.newUpdate().updateById(User.builder().id(43115L).phone("13800138000").key("mykey").build());
         println("updateById", update);
     }
 
@@ -202,8 +203,8 @@ public class KotMysqlTests {
      */
     @Test
     public void update() {
-        final User user = User.builder().realName("兴").build();
-        final int update = userService.newUpdate().eq(user::getUserName, "S16kKq6A5F").activeLike().update(User.builder().password("123").build(), user);
+        final User user = User.builder().realName("兴").key("mykey").build();
+        final int update = userService.newUpdate().eq(user::getUserName, "S16kKq6A5F").activeLike().update(User.builder().password("123").key("mykey1").build(), user);
         println("update", update);
     }
 
