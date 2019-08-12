@@ -51,6 +51,11 @@ public class GoodsController {
         return JSONObject.toJSONString(goodsService.newQuery().list(Goods.builder().id(id).build()));
     }
 
+    @RequestMapping("/all")
+    public String list() {
+        return JSONObject.toJSONString(goodsService.all());
+    }
+
     @RequestMapping("/updateById")
     public int updateById(Long id, String goodName) {
         return goodsService.newUpdate().updateById(Goods.builder().goodName(goodName).id(id).build());
