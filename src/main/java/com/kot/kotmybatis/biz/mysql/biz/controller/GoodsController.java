@@ -1,6 +1,7 @@
 package com.kot.kotmybatis.biz.mysql.biz.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.kot.kotmybatis.biz.mysql.biz.entity.Goods;
 import com.kot.kotmybatis.biz.mysql.biz.entity.Order;
 import com.kot.kotmybatis.biz.mysql.biz.service.IGoodsService;
@@ -43,5 +44,15 @@ public class GoodsController {
         goodsService.newUpdate().update(Goods.builder().sold(0).version(0).build(), Goods.builder().id(1L).build());
         orderService.newUpdate().delete(new Order());
         return "SUCCESS";
+    }
+
+    @RequestMapping("/list")
+    public String list(Long id) {
+        return JSONObject.toJSONString(goodsService.newQuery().list(Goods.builder().id(id).build()));
+    }
+
+    @RequestMapping("/updateById")
+    public int updateById(Long id, String goodName) {
+        return goodsService.newUpdate().updateById(Goods.builder().goodName(goodName).id(id).build());
     }
 }
