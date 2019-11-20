@@ -6,6 +6,7 @@ import com.kot.kotmybatis.biz.mysql.biz.entity.Order;
 import com.kot.kotmybatis.biz.mysql.biz.entity.User;
 import com.kot.kotmybatis.biz.mysql.biz.service.IOrderService;
 import com.kot.kotmybatis.biz.mysql.biz.service.UserService;
+import com.kot.kotmybatis.utils.RandomValueUtil;
 import kot.bootstarter.kotmybatis.common.Page;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,9 +32,25 @@ public class KotMysqlTests {
     private IOrderService orderService;
 
     @Test
+    public void autoInsert() {
+        final User user = User.builder()
+                .unionId(RandomValueUtil.password())
+                .realName(RandomValueUtil.name())
+                .phone(RandomValueUtil.phone())
+                .email(RandomValueUtil.email(1, 20))
+                .userName(RandomValueUtil.nick())
+                .password(RandomValueUtil.password())
+//                .userStatus(1)
+                .createUser(RandomValueUtil.getLongNum(0, 1000))
+                .isDelete(1).build();
+        userService.newUpdate().insert(user);
+        println("myInsert", user);
+    }
+
+    @Test
     public void myInsert() {
-        final User user = User.builder().unionId(com.kot.kotmybatis.utils.RandomValueUtil.password()).realName(com.kot.kotmybatis.utils.RandomValueUtil.name()).phone(com.kot.kotmybatis.utils.RandomValueUtil.phone()).email(com.kot.kotmybatis.utils.RandomValueUtil.email(1, 20)).userName(com.kot.kotmybatis.utils.RandomValueUtil.nick())
-                .password(com.kot.kotmybatis.utils.RandomValueUtil.password()).userStatus(1).createUser(com.kot.kotmybatis.utils.RandomValueUtil.getLongNum(0, 1000)).isDelete(1).build();
+        final User user = User.builder().unionId(RandomValueUtil.password()).realName(RandomValueUtil.name()).phone(RandomValueUtil.phone()).email(RandomValueUtil.email(1, 20)).userName(RandomValueUtil.nick())
+                .password(RandomValueUtil.password()).userStatus(1).createUser(RandomValueUtil.getLongNum(0, 1000)).isDelete(1).build();
         userService.myInsert(user);
         println("myInsert", user);
     }
@@ -49,12 +66,12 @@ public class KotMysqlTests {
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             new Thread(() -> {
-                final User user = User.builder().unionId(com.kot.kotmybatis.utils.RandomValueUtil.password()).realName(com.kot.kotmybatis.utils.RandomValueUtil.name()).phone(com.kot.kotmybatis.utils.RandomValueUtil.phone()).email(com.kot.kotmybatis.utils.RandomValueUtil.email(1, 20)).userName(com.kot.kotmybatis.utils.RandomValueUtil.nick())
-                        .password(com.kot.kotmybatis.utils.RandomValueUtil.password()).userStatus(1).createUser(com.kot.kotmybatis.utils.RandomValueUtil.getLongNum(0, 1000)).isDelete(1).key("mykey").build();
+                final User user = User.builder().unionId(RandomValueUtil.password()).realName(RandomValueUtil.name()).phone(RandomValueUtil.phone()).email(RandomValueUtil.email(1, 20)).userName(RandomValueUtil.nick())
+                        .password(RandomValueUtil.password()).userStatus(1).createUser(RandomValueUtil.getLongNum(0, 1000)).isDelete(1).key("mykey").build();
                 userService.newQuery().insert(user);
-                latch.countDown();
                 ids.add(user.getId());
                 println("insert", user);
+                latch.countDown();
             }).start();
         }
         latch.await();
@@ -69,8 +86,8 @@ public class KotMysqlTests {
     public void batchInsert() {
         List<User> list = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            list.add(User.builder().realName(com.kot.kotmybatis.utils.RandomValueUtil.name()).userName(com.kot.kotmybatis.utils.RandomValueUtil.nick()).password(com.kot.kotmybatis.utils.RandomValueUtil.password()).phone(com.kot.kotmybatis.utils.RandomValueUtil.phone())
-                    .email(com.kot.kotmybatis.utils.RandomValueUtil.email(1, 10)).userStatus(1).createUser(com.kot.kotmybatis.utils.RandomValueUtil.getLongNum(1, 1000)).isDelete(1).key("mykey").build());
+            list.add(User.builder().realName(RandomValueUtil.name()).userName(RandomValueUtil.nick()).password(RandomValueUtil.password()).phone(RandomValueUtil.phone())
+                    .email(RandomValueUtil.email(1, 10)).userStatus(1).createUser(RandomValueUtil.getLongNum(1, 1000)).isDelete(1).key("mykey").build());
         }
         final int count = userService.newUpdate().batchInsert(list);
         println("batchInsert", count);
@@ -194,7 +211,7 @@ public class KotMysqlTests {
      */
     @Test
     public void updateByIdSetNull() {
-        final int update = userService.newUpdate().updateById(User.builder().id(43114L).realName("张三").phone("13800138000").userName("kakrot").password("123").createUser(1L).isDelete(1).build(), true);
+        final int update = userService.newUpdate().updateById(User.builder().id(43114L).realName("张三").phone("13800138000").userName("kakrot").password("123").createUser(1L).isDelete(1).userStatus(1).build(), true);
         println("updateByIdSetNull", update);
     }
 
@@ -214,7 +231,7 @@ public class KotMysqlTests {
     @Test
     public void updateSetNull() {
         final User user = User.builder().realName("兴").build();
-        final int update = userService.newUpdate().activeLike().eq(user::getUserName, "kulin").update(User.builder().realName("于兴2").userName("kulin").password("123").createUser(2L).isDelete(1).build(), user, true);
+        final int update = userService.newUpdate().activeLike().eq(user::getUserName, "kulin").update(User.builder().realName("于兴2").userName("kulin").password("123").createUser(2L).isDelete(1).userStatus(1).build(), user, true);
         println("updateSetNull", update);
     }
 
@@ -269,12 +286,30 @@ public class KotMysqlTests {
         println("relatedQuery", list);
     }
 
+    /**
+     * 存在
+     */
+    @Test
+    public void exist() {
+        println("exist", orderService.newQuery().exist(Order.builder().id(953L).build()));
+    }
+
+    /**
+     * 子表关联查询
+     */
+    @Test
+    public void unionQuery() {
+        final List<Order> list = orderService.newQuery().activeUnion().list(Order.builder().id(953L).build());
+        println("unionQuery", list);
+    }
+
+
     public static void println(Object obj) {
         println("", obj);
     }
 
     public static void println(String prefix, Object obj) {
-        System.err.println(prefix + ": " + com.kot.kotmybatis.utils.JsonFormatUtil.formatJson(JSON.toJSONString(obj)));
+        System.err.println(prefix + ": " + JSON.toJSONString(obj, true));
     }
 
 

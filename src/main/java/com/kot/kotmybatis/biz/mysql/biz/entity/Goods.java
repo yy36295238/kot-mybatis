@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author yangyu
@@ -18,7 +20,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @TableName("t_goods")
-public class Goods implements Serializable{
+public class Goods implements Serializable {
     /**
      *
      */
@@ -49,4 +51,10 @@ public class Goods implements Serializable{
      */
     @Column(value = "version", version = true)
     private Integer version;
+
+    private List<Order> orders;
+
+    private ArrayList<Order> orderArrayList;
+
+    private Order order;
 }

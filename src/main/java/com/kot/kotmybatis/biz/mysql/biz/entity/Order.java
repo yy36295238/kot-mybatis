@@ -1,15 +1,13 @@
 package com.kot.kotmybatis.biz.mysql.biz.entity;
 
-import kot.bootstarter.kotmybatis.annotation.Column;
-import kot.bootstarter.kotmybatis.annotation.ID;
-import kot.bootstarter.kotmybatis.annotation.Related;
-import kot.bootstarter.kotmybatis.annotation.TableName;
+import kot.bootstarter.kotmybatis.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author yangyu
@@ -61,4 +59,10 @@ public class Order {
      * 真实姓名
      */
     private String realName;
+
+    @UnionItem(clazz = Goods.class, fkColumn = "goodsId")
+    private List<Goods> goodsList;
+
+    @UnionItem(clazz = Goods.class, fkColumn = "goodsId")
+    private Goods goods;
 }

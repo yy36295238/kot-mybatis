@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.kot.kotmybatis.biz.pg.biz.entity.Account;
 import com.kot.kotmybatis.biz.pg.biz.service.IAccountService;
-import com.kot.kotmybatis.utils.JsonFormatUtil;
 import com.kot.kotmybatis.utils.RandomValueUtil;
 import kot.bootstarter.kotmybatis.common.Page;
 import org.junit.Test;
@@ -16,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 @RunWith(SpringRunner.class)
@@ -91,7 +89,7 @@ public class KotPgTests {
     }
 
     public static void println(String prefix, Object obj) {
-        System.err.println(prefix + ": " + JsonFormatUtil.formatJson(JSON.toJSONString(obj)));
+        System.err.println(prefix + ": " + JSON.toJSONString(obj, true));
     }
 
 
