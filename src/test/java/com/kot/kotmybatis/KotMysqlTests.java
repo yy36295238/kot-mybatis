@@ -8,6 +8,7 @@ import com.kot.kotmybatis.biz.mysql.biz.service.IOrderService;
 import com.kot.kotmybatis.biz.mysql.biz.service.UserService;
 import com.kot.kotmybatis.utils.RandomValueUtil;
 import kot.bootstarter.kotmybatis.common.Page;
+import kot.bootstarter.kotmybatis.common.model.ColumnExistInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -303,9 +304,43 @@ public class KotMysqlTests {
         println("unionQuery", list);
     }
 
+    /**
+     * 插入表判断某些字段存在
+     */
+    @Test
+    public void insertWithCheckColumns() {
+        final User user = User.builder()
+                .unionId(RandomValueUtil.password())
+                .realName(RandomValueUtil.name())
+                .phone("13800138099")
+                .email(RandomValueUtil.email(1, 20))
+                .userName("kulin22")
+                .password(RandomValueUtil.password())
+//                .userStatus(1)
+                .createUser(RandomValueUtil.getLongNum(0, 1000))
+                .isDelete(1).build();
+
+        final ColumnExistInfo columnExistInfo = userService.newUpdate().insertWithCheckColumns(user, "phone", "userName");
+        println(columnExistInfo);
+    }
+
+    /**
+     * 插入表判断某些字段存在
+     */
+    @Test
+    public void updateByIdWithCheckColumns() {
+        final User user = User.builder()
+                .id(43095L)
+                .phone("13800138088")
+                .userName("张三1")
+                .build();
+
+        final ColumnExistInfo columnExistInfo = userService.newUpdate().updateByIdWithCheckColumns(user, "phone", "userName");
+        println(columnExistInfo);
+    }
+
 
     public static void println(Object obj) {
-
         println(Thread.currentThread().getStackTrace()[2].getMethodName(), obj);
     }
 
