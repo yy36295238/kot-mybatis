@@ -305,7 +305,8 @@ public class KotMysqlTests {
 
 
     public static void println(Object obj) {
-        println("", obj);
+
+        println(Thread.currentThread().getStackTrace()[2].getMethodName(), obj);
     }
 
     public static void println(String prefix, Object obj) {

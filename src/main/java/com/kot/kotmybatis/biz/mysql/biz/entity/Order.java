@@ -60,9 +60,15 @@ public class Order {
      */
     private String realName;
 
+    /**
+     * 关联表集合
+     */
     @UnionItem(clazz = Goods.class, fkColumn = "goodsId")
     private List<Goods> goodsList;
 
+    /**
+     * 关联表对象
+     */
     @UnionItem(clazz = Goods.class, fkColumn = "goodsId")
     private Goods goods;
 }

@@ -6,5 +6,10 @@ package com.kot.kotmybatis;
  */
 public class Test {
     public static void main(String[] args) {
+        preMethodName();
+    }
+
+    public static String preMethodName() {
+        return "";
     }
 }

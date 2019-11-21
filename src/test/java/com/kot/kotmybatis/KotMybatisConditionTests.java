@@ -12,6 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.kot.kotmybatis.KotMysqlTests.println;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class KotMybatisConditionTests {
@@ -144,8 +146,17 @@ public class KotMybatisConditionTests {
         println(users);
     }
 
-    public static void println(Object obj) {
-        System.err.println((JSON.toJSONString(obj)));
+    @Test
+    public void isNotNull() {
+        final List<User> users = userService.newQuery().eq("id", 43095).notNull("real_name").list(new User());
+        println(users);
+    }
+
+    @Test
+    public void isNotNullLambda() {
+        final User user = User.builder().userStatus(1).build();
+        final List<User> users = userService.newQuery().notNull(user::getRealName).list(user);
+        println(users);
     }
 
 
