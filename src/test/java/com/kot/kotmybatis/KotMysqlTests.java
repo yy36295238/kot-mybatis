@@ -6,9 +6,9 @@ import com.kot.kotmybatis.biz.mysql.biz.entity.Order;
 import com.kot.kotmybatis.biz.mysql.biz.entity.User;
 import com.kot.kotmybatis.biz.mysql.biz.service.IOrderService;
 import com.kot.kotmybatis.biz.mysql.biz.service.UserService;
-import com.kot.kotmybatis.utils.RandomValueUtil;
 import kot.bootstarter.kotmybatis.common.Page;
 import kot.bootstarter.kotmybatis.common.model.ColumnExistInfo;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+
+import static com.kot.kotmybatis.utils.RandomValueUtil.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -35,25 +37,27 @@ public class KotMysqlTests {
     @Test
     public void autoInsert() {
         final User user = User.builder()
-                .unionId(RandomValueUtil.password())
-                .realName(RandomValueUtil.name())
-                .phone(RandomValueUtil.phone())
-                .email(RandomValueUtil.email(1, 20))
-                .userName(RandomValueUtil.nick())
-                .password(RandomValueUtil.password())
+                .unionId(password())
+                .realName(name())
+                .phone(phone())
+                .email(email(1, 20))
+                .userName(nick())
+                .password(password())
 //                .userStatus(1)
-                .createUser(RandomValueUtil.getLongNum(0, 1000))
+                .createUser(getLongNum(0, 1000))
                 .isDelete(1).build();
         userService.newUpdate().insert(user);
-        println("myInsert", user);
+        println(user);
+        Assert.assertTrue(userService.newQuery().exist(User.builder().id(user.getId()).build()));
     }
 
     @Test
     public void myInsert() {
-        final User user = User.builder().unionId(RandomValueUtil.password()).realName(RandomValueUtil.name()).phone(RandomValueUtil.phone()).email(RandomValueUtil.email(1, 20)).userName(RandomValueUtil.nick())
-                .password(RandomValueUtil.password()).userStatus(1).createUser(RandomValueUtil.getLongNum(0, 1000)).isDelete(1).build();
+        final User user = User.builder().unionId(password()).realName(name()).phone(phone()).email(email(1, 20)).userName(nick())
+                .password(password()).userStatus(1).createUser(getLongNum(0, 1000)).isDelete(1).build();
         userService.myInsert(user);
-        println("myInsert", user);
+        Assert.assertTrue(userService.newQuery().exist(User.builder().id(user.getId()).build()));
+        println(user);
     }
 
     /**
@@ -67,16 +71,20 @@ public class KotMysqlTests {
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             new Thread(() -> {
-                final User user = User.builder().unionId(RandomValueUtil.password()).realName(RandomValueUtil.name()).phone(RandomValueUtil.phone()).email(RandomValueUtil.email(1, 20)).userName(RandomValueUtil.nick())
-                        .password(RandomValueUtil.password()).userStatus(1).createUser(RandomValueUtil.getLongNum(0, 1000)).isDelete(1).key("mykey").build();
+                final User user = User.builder().unionId(password()).realName(name()).phone(phone()).email(email(1, 20)).userName(nick())
+                        .password(password()).userStatus(1).createUser(getLongNum(0, 1000)).isDelete(1).key("mykey").build();
                 userService.newQuery().insert(user);
                 ids.add(user.getId());
-                println("insert", user);
+                println(user);
                 latch.countDown();
             }).start();
         }
         latch.await();
-        ids.stream().sorted().forEach(System.out::println);
+        ids.stream().sorted().forEach(id -> {
+                    Assert.assertTrue(userService.newQuery().exist(User.builder().id(id).build()));
+                    System.out.println(id);
+                }
+        );
         Thread.sleep(5000);
     }
 
@@ -87,12 +95,16 @@ public class KotMysqlTests {
     public void batchInsert() {
         List<User> list = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            list.add(User.builder().realName(RandomValueUtil.name()).userName(RandomValueUtil.nick()).password(RandomValueUtil.password()).phone(RandomValueUtil.phone())
-                    .email(RandomValueUtil.email(1, 10)).userStatus(1).createUser(RandomValueUtil.getLongNum(1, 1000)).isDelete(1).key("mykey").build());
+            list.add(User.builder().realName(name()).userName(nick()).password(password()).phone(phone())
+                    .email(email(1, 10)).userStatus(1).createUser(getLongNum(1, 1000)).isDelete(1).key("mykey").build());
         }
         final int count = userService.newUpdate().batchInsert(list);
-        println("batchInsert", count);
-        list.forEach(System.out::println);
+        println(count);
+        list.forEach(user -> {
+                    Assert.assertTrue(userService.newQuery().exist(User.builder().id(user.getId()).build()));
+                    System.out.println(user.getId());
+                }
+        );
     }
 
     /**
@@ -102,7 +114,7 @@ public class KotMysqlTests {
     public void save() {
         final User user = User.builder().realName("张三1").phone("13800138000").email("13800138000@139.com").userName("zhangsan").password("123").userStatus(1).createUser(1L).isDelete(1).build();
         final int save = userService.newQuery().save(user);
-        println("save", save);
+        println(save);
     }
 
     /**
@@ -111,7 +123,8 @@ public class KotMysqlTests {
     @Test
     public void findOneNoWhere() {
         final User user = userService.newQuery().orderByIdDesc().findOne(new User());
-        println("findOneNoWhere", user);
+        println(user);
+        Assert.assertNotNull(user);
     }
 
     /**
@@ -128,7 +141,8 @@ public class KotMysqlTests {
                 .orderBy("id desc")
                 .activeLike()
                 .findOne(user);
-        println("findOne", result);
+        println(result);
+        Assert.assertNotNull(user);
     }
 
     /**
@@ -141,7 +155,8 @@ public class KotMysqlTests {
                 .fields(user::getId, user::getUserName, user::getCreateUser, user::getRealName)
 //                .activeRelated()
                 .list(user);
-        println("list", list);
+        println(list);
+        Assert.assertNotNull(list);
     }
 
     /**
@@ -150,7 +165,8 @@ public class KotMysqlTests {
     @Test
     public void count() {
         final int count = userService.newQuery().count(new User());
-        println("count", count);
+        println(count);
+        Assert.assertTrue(count > 0);
     }
 
     /**
@@ -162,7 +178,7 @@ public class KotMysqlTests {
                 .fields(Arrays.asList("id", "user_name", "password"))
                 .orderByIdDesc()
                 .selectPage(new Page<>(1, 10), User.builder().userStatus(1).build());
-        println("page", page);
+        println(page);
     }
 
     /**
@@ -171,7 +187,8 @@ public class KotMysqlTests {
     @Test
     public void delete() {
         final int delete = userService.newUpdate().delete(User.builder().id(100000L).build());
-        println("delete", delete);
+        println(delete);
+        Assert.assertEquals(0, delete);
     }
 
     /**
@@ -180,7 +197,8 @@ public class KotMysqlTests {
     @Test
     public void updateById() {
         final int update = userService.newUpdate().updateById(User.builder().id(43115L).phone("13800138000").key("mykey").build());
-        println("updateById", update);
+        println(update);
+        Assert.assertEquals(0, update);
     }
 
     /**
@@ -191,8 +209,10 @@ public class KotMysqlTests {
         final User user = userService.newQuery().findOne(User.builder().id(43188L).build());
         final int update1 = userService.newUpdate().updateById(User.builder().phone("13900139000").version(user.getVersion()).id(user.getId()).build());
         final int update2 = userService.newUpdate().updateById(User.builder().phone("13900139000").version(user.getVersion()).id(user.getId()).build());
-        println("updateByIdForVersionLock", update1 > 0 ? "成功" : "失败");
-        println("updateByIdForVersionLock", update2 > 0 ? "成功" : "失败");
+        println(update1 > 0 ? "成功" : "失败");
+        Assert.assertTrue(update1 > 0);
+        println(update2 > 0 ? "成功" : "失败");
+        Assert.assertTrue(update2 <= 0);
     }
 
     /**
@@ -203,8 +223,10 @@ public class KotMysqlTests {
         final User user = userService.newQuery().findOne(User.builder().id(43188L).build());
         final int update1 = userService.newUpdate().update(User.builder().phone("13800138000").build(), User.builder().version(user.getVersion()).id(43188L).build());
         final int update2 = userService.newUpdate().update(User.builder().phone("13800138000").build(), User.builder().version(user.getVersion()).id(43188L).build());
-        println("updateForVersionLock", update1 > 0 ? "成功" : "失败");
-        println("updateForVersionLock", update2 > 0 ? "成功" : "失败");
+        println(update1 > 0 ? "成功" : "失败");
+        Assert.assertTrue(update1 > 0);
+        println(update2 > 0 ? "成功" : "失败");
+        Assert.assertTrue(update2 <= 0);
     }
 
     /**
@@ -213,7 +235,8 @@ public class KotMysqlTests {
     @Test
     public void updateByIdSetNull() {
         final int update = userService.newUpdate().updateById(User.builder().id(43114L).realName("张三").phone("13800138000").userName("kakrot").password("123").createUser(1L).isDelete(1).userStatus(1).build(), true);
-        println("updateByIdSetNull", update);
+        println(update);
+        Assert.assertEquals(1, update);
     }
 
     /**
@@ -223,7 +246,8 @@ public class KotMysqlTests {
     public void update() {
         final User user = User.builder().realName("兴").key("mykey").build();
         final int update = userService.newUpdate().eq(user::getUserName, "S16kKq6A5F").activeLike().update(User.builder().password("123").key("mykey1").build(), user);
-        println("update", update);
+        println(update);
+        Assert.assertEquals(0, update);
     }
 
     /**
@@ -233,7 +257,8 @@ public class KotMysqlTests {
     public void updateSetNull() {
         final User user = User.builder().realName("兴").build();
         final int update = userService.newUpdate().activeLike().eq(user::getUserName, "kulin").update(User.builder().realName("于兴2").userName("kulin").password("123").createUser(2L).isDelete(1).userStatus(1).build(), user, true);
-        println("updateSetNull", update);
+        println(update);
+        Assert.assertEquals(1, update);
     }
 
 
@@ -246,6 +271,7 @@ public class KotMysqlTests {
         final int count = userService.newUpdate().activeLike()
                 .eq(user::getId, 43181L).logicDelete(user);
         println("logicDelete", count);
+        Assert.assertEquals(0, count);
     }
 
 
@@ -257,6 +283,8 @@ public class KotMysqlTests {
         final User user = User.builder().openId("wx123").userName("51Ii00s0s8").realName("福").build();
         final Map<String, Object> columnExist = userService.newQuery().columnExist(user);
         println("columnExist", columnExist);
+        Assert.assertTrue(columnExist.containsKey("openId"));
+        Assert.assertTrue(columnExist.containsKey("userName"));
     }
 
 
@@ -285,6 +313,7 @@ public class KotMysqlTests {
     public void relatedQuery() {
         final List<Order> list = orderService.newQuery().activeRelated().list(new Order());
         println("relatedQuery", list);
+        Assert.assertEquals(list.get(0).getGoodName(), "华为手机");
     }
 
     /**
@@ -292,7 +321,9 @@ public class KotMysqlTests {
      */
     @Test
     public void exist() {
-        println("exist", orderService.newQuery().exist(Order.builder().id(953L).build()));
+        final boolean exist = orderService.newQuery().exist(Order.builder().id(953L).build());
+        println("exist", exist);
+        Assert.assertTrue(exist);
     }
 
     /**
@@ -310,17 +341,19 @@ public class KotMysqlTests {
     @Test
     public void insertWithCheckColumns() {
         final User user = User.builder()
-                .unionId(RandomValueUtil.password())
-                .realName(RandomValueUtil.name())
+                .unionId(password())
+                .realName(name())
                 .phone("13800138099")
-                .email(RandomValueUtil.email(1, 20))
+                .email(email(1, 20))
                 .userName("kulin22")
-                .password(RandomValueUtil.password())
+                .password(password())
 //                .userStatus(1)
-                .createUser(RandomValueUtil.getLongNum(0, 1000))
+                .createUser(getLongNum(0, 1000))
                 .isDelete(1).build();
 
         final ColumnExistInfo columnExistInfo = userService.newUpdate().insertWithCheckColumns(user, "phone", "userName");
+        Assert.assertTrue(columnExistInfo.isExist());
+        Assert.assertTrue(columnExistInfo.getExistSet().contains("userName"));
         println(columnExistInfo);
     }
 
@@ -330,12 +363,14 @@ public class KotMysqlTests {
     @Test
     public void updateByIdWithCheckColumns() {
         final User user = User.builder()
-                .id(43095L)
-                .phone("13800138088")
-                .userName("张三1")
+                .id(43183L)
+                .realName(name())
+                .phone(phone())
+                .userName("aY5U8bdnu4")
+                .email(email(1, 10))
                 .build();
 
-        final ColumnExistInfo columnExistInfo = userService.newUpdate().updateByIdWithCheckColumns(user, "phone", "userName");
+        final ColumnExistInfo columnExistInfo = userService.newUpdate().updateByIdWithCheckColumns(user, "phone", "user_name", "email");
         println(columnExistInfo);
     }
 
