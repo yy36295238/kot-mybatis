@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class GoodsController {
 
@@ -47,7 +49,7 @@ public class GoodsController {
     }
 
     @RequestMapping("/list")
-    public Object list(Long id) {
+    public List<Goods> list(Long id) {
         return goodsService.newQuery().list(Goods.builder().id(id).build());
     }
 
