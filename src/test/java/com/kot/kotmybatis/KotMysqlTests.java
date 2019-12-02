@@ -358,7 +358,7 @@ public class KotMysqlTests {
     }
 
     /**
-     * 插入表判断某些字段存在
+     * 更新表判断某些字段存在
      */
     @Test
     public void updateByIdWithCheckColumns() {

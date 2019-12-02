@@ -47,8 +47,8 @@ public class GoodsController {
     }
 
     @RequestMapping("/list")
-    public String list(Long id) {
-        return JSONObject.toJSONString(goodsService.newQuery().list(Goods.builder().id(id).build()));
+    public Object list(Long id) {
+        return goodsService.newQuery().list(Goods.builder().id(id).build());
     }
 
     @RequestMapping("/all")
