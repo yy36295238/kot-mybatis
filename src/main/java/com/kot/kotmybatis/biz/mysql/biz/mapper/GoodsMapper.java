@@ -12,7 +12,6 @@ import java.util.Map;
  * @author yangyu
  */
 
-@CacheNamespace(flushInterval = 5000)
 public interface GoodsMapper extends BaseMapper<Goods> {
 
     @Select("SELECT * FROM t_goods g INNER JOIN t_order o ON g.id=o.goods_id;")

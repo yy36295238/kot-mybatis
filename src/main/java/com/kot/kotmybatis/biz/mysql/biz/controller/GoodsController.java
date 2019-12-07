@@ -6,11 +6,10 @@ import com.kot.kotmybatis.biz.mysql.biz.entity.Goods;
 import com.kot.kotmybatis.biz.mysql.biz.entity.Order;
 import com.kot.kotmybatis.biz.mysql.biz.service.IGoodsService;
 import com.kot.kotmybatis.biz.mysql.biz.service.IOrderService;
+import com.kot.kotmybatis.common.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 public class GoodsController {
@@ -49,12 +48,12 @@ public class GoodsController {
     }
 
     @RequestMapping("/list")
-    public List<Goods> list(Long id) {
-        return goodsService.newQuery().list(Goods.builder().id(id).build());
+    public ResponseResult list() {
+        return ResponseResult.ok(goodsService.newQuery().list(Goods.builder().build()));
     }
 
     @RequestMapping("/all")
-    public String list() {
+    public String all() {
         return JSONObject.toJSONString(goodsService.all());
     }
 
