@@ -2,6 +2,7 @@ package com.kot.kotmybatis.biz.mysql.biz.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.kot.kotmybatis.biz.mysql.biz.entity.Goods;
 import com.kot.kotmybatis.biz.mysql.biz.entity.Order;
 import com.kot.kotmybatis.biz.mysql.biz.service.IGoodsService;
@@ -10,6 +11,9 @@ import com.kot.kotmybatis.common.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class GoodsController {
@@ -47,15 +51,44 @@ public class GoodsController {
         return "SUCCESS";
     }
 
+    public static void main(String[] args) throws ClassNotFoundException {
+        {
+            if (true) {
+                try {
+                    TypeReference<ResponseResult> typeReference = new TypeReference<ResponseResult>() {
+                    };
+                    ResponseResult responseResult = JSONObject.parseObject("{}", typeReference);
+                    System.out.println(responseResult);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+    }
+
     @RequestMapping("/list")
-    public ResponseResult list() {
+    public ResponseResult list(String name) {
+        System.err.println("name: " + name);
         return ResponseResult.ok(goodsService.newQuery().list(Goods.builder().build()));
     }
 
     @RequestMapping("/all")
-    public String all() {
-        return JSONObject.toJSONString(goodsService.all());
+    public List<Map<String, Object>> all() {
+        return goodsService.all();
     }
+
+    @RequestMapping("/one")
+    public Goods one() {
+        return goodsService.newQuery().findOne(new Goods());
+    }
+
+    @RequestMapping("/test")
+    public List<Goods> test() {
+        return goodsService.newQuery().list(Goods.builder().build());
+    }
+
 
     @RequestMapping("/updateById")
     public int updateById(Long id, String goodName) {
