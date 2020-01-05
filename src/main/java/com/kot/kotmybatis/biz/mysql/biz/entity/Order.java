@@ -63,12 +63,12 @@ public class Order {
     /**
      * 关联表集合
      */
-    @UnionItem(clazz = Goods.class, fkColumn = "goodsId")
+    @UnionItem(clazz = Goods.class, currColumn = "goodsId", fkColumn = "id")
     private List<Goods> goodsList;
 
     /**
      * 关联表对象
      */
-    @UnionItem(clazz = Goods.class, fkColumn = "goodsId")
+    @UnionItem(clazz = Goods.class, currColumn = "goodsId", fkColumn = "id")
     private Goods goods;
 }

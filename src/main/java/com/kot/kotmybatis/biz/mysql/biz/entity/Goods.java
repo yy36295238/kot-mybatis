@@ -3,6 +3,7 @@ package com.kot.kotmybatis.biz.mysql.biz.entity;
 import kot.bootstarter.kotmybatis.annotation.Column;
 import kot.bootstarter.kotmybatis.annotation.ID;
 import kot.bootstarter.kotmybatis.annotation.TableName;
+import kot.bootstarter.kotmybatis.annotation.UnionItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -52,9 +53,11 @@ public class Goods implements Serializable {
     @Column(value = "version", version = true)
     private Integer version;
 
+    @UnionItem(clazz = Order.class, currColumn = "id", fkColumn = "goodsId")
     private List<Order> orders;
 
     private ArrayList<Order> orderArrayList;
 
     private Order order;
+
 }

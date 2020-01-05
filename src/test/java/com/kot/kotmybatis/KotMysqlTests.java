@@ -2,8 +2,10 @@ package com.kot.kotmybatis;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import com.kot.kotmybatis.biz.mysql.biz.entity.Goods;
 import com.kot.kotmybatis.biz.mysql.biz.entity.Order;
 import com.kot.kotmybatis.biz.mysql.biz.entity.User;
+import com.kot.kotmybatis.biz.mysql.biz.service.IGoodsService;
 import com.kot.kotmybatis.biz.mysql.biz.service.IOrderService;
 import com.kot.kotmybatis.biz.mysql.biz.service.UserService;
 import kot.bootstarter.kotmybatis.common.Page;
@@ -33,6 +35,9 @@ public class KotMysqlTests {
 
     @Autowired
     private IOrderService orderService;
+
+    @Autowired
+    private IGoodsService goodsService;
 
     @Test
     public void autoInsert() {
@@ -282,7 +287,7 @@ public class KotMysqlTests {
     public void columnExist() {
         final User user = User.builder().openId("wx123").userName("51Ii00s0s8").realName("福").build();
         final Map<String, Object> columnExist = userService.newQuery().columnExist(user);
-        println("columnExist", columnExist);
+        println(columnExist);
         Assert.assertTrue(columnExist.containsKey("openId"));
         Assert.assertTrue(columnExist.containsKey("userName"));
     }
@@ -294,7 +299,7 @@ public class KotMysqlTests {
     @Test
     public void listForMap() {
         final List<Map<String, Object>> list = userService.listForMap();
-        println("listForMap", list);
+        println(list);
     }
 
     /**
@@ -303,7 +308,7 @@ public class KotMysqlTests {
     @Test
     public void findOneForMap() {
         final Map<String, Object> map = userService.findOneForMap();
-        println("findOneForMap", map);
+        println(map);
     }
 
     /**
@@ -312,7 +317,7 @@ public class KotMysqlTests {
     @Test
     public void relatedQuery() {
         final List<Order> list = orderService.newQuery().activeRelated().list(new Order());
-        println("relatedQuery", list);
+        println(list);
         Assert.assertEquals(list.get(0).getGoodName(), "华为手机");
     }
 
@@ -322,7 +327,7 @@ public class KotMysqlTests {
     @Test
     public void exist() {
         final boolean exist = orderService.newQuery().exist(Order.builder().id(953L).build());
-        println("exist", exist);
+        println(exist);
         Assert.assertTrue(exist);
     }
 
@@ -332,7 +337,16 @@ public class KotMysqlTests {
     @Test
     public void unionQuery() {
         final List<Order> list = orderService.newQuery().activeUnion().list(Order.builder().id(953L).build());
-        println("unionQuery", list);
+        println(list);
+    }
+
+    /**
+     * 子表关联查询
+     */
+    @Test
+    public void unionQuery1() {
+        List<Goods> goodsList = goodsService.newQuery().activeUnion().list(Goods.builder().id(1L).build());
+        println(goodsList);
     }
 
     /**
