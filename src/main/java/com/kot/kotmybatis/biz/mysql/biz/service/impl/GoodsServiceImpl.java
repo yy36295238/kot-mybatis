@@ -23,4 +23,10 @@ public class GoodsServiceImpl extends MapperManagerServiceImpl<Goods> implements
     public List<Map<String, Object>> all() {
         return goodsMapper.all();
     }
+
+    @Override
+    public String getCar() {
+        return new Car().getCar();
+    }
+
 }

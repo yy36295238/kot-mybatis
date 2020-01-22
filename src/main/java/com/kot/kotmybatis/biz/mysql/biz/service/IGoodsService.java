@@ -12,4 +12,6 @@ import java.util.Map;
 public interface IGoodsService extends MapperManagerService<Goods> {
 
     List<Map<String, Object>> all();
+
+    String getCar();
 }

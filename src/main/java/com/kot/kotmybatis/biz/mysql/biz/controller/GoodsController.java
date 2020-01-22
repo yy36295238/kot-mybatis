@@ -1,8 +1,6 @@
 package com.kot.kotmybatis.biz.mysql.biz.controller;
 
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.kot.kotmybatis.biz.mysql.biz.entity.Goods;
 import com.kot.kotmybatis.biz.mysql.biz.entity.Order;
 import com.kot.kotmybatis.biz.mysql.biz.service.IGoodsService;
@@ -51,27 +49,15 @@ public class GoodsController {
         return "SUCCESS";
     }
 
-    public static void main(String[] args) throws ClassNotFoundException {
-        {
-            if (true) {
-                try {
-                    TypeReference<ResponseResult> typeReference = new TypeReference<ResponseResult>() {
-                    };
-                    ResponseResult responseResult = JSONObject.parseObject("{}", typeReference);
-                    System.out.println(responseResult);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-
-    }
-
     @RequestMapping("/list")
     public ResponseResult list(String name) {
         System.err.println("name: " + name);
         return ResponseResult.ok(goodsService.newQuery().list(Goods.builder().build()));
+    }
+
+    @RequestMapping("/getCar")
+    public ResponseResult getCar() {
+        return ResponseResult.ok(goodsService.getCar());
     }
 
     @RequestMapping("/all")
