@@ -1,5 +1,6 @@
 package com.kot.kotmybatis.biz.mysql.biz.entity;
 
+import kot.bootstarter.kotmybatis.activerecord.ActiveRecord;
 import kot.bootstarter.kotmybatis.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @TableName("t_user")
-public class User {
+public class User extends ActiveRecord<User> {
     /**
      * 主键
      */
