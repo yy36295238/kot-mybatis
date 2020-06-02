@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@TableName("t_user")
+@TableName(value = "t_user")
 public class User extends ActiveRecord<User> {
     /**
      * 主键

@@ -200,7 +200,7 @@ public class KotActiveRecordlTests {
         final User user = User.builder().realName("兴").build();
         final int update = User.builder().realName("于兴2").userName("kulin").password("123").createUser(2L).isDelete(1).userStatus(1).build().activeLike().eq(user::getUserName, "kulin").update(user, true);
         println(update);
-        Assert.assertEquals(1, update);
+        Assert.assertEquals(0, update);
     }
 
 
