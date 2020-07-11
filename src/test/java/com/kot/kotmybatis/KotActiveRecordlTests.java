@@ -84,6 +84,33 @@ public class KotActiveRecordlTests {
                 .activeLike()
                 .findOne();
         println(result);
+
+        User findUser = User.builder().id(43097L).realName("郏聪琦").build()
+                .eq(user::getPhone, "13403620280")
+                .between(user::getCreateUser, 1, 10000)
+                .activeLike().orderByIdDesc().findOne();
+        Assert.assertNotNull(findUser);
+    }
+
+    /**
+     * 条件查询，单条信息
+     */
+    @Test
+    public void saveAndFind() {
+        final User user = User.builder()
+                .unionId(password())
+                .realName(name())
+                .phone(phone())
+                .email(email(1, 20))
+                .userName(nick())
+                .password(password())
+                .userStatus(1)
+                .createUser(getLongNum(0, 1000))
+                .isDelete(1).build();
+        user.insert();
+
+        user.findOne();
+        println(user);
         Assert.assertNotNull(user);
     }
 
@@ -197,10 +224,10 @@ public class KotActiveRecordlTests {
      */
     @Test
     public void updateSetNull() {
-        final User user = User.builder().realName("兴").build();
-        final int update = User.builder().realName("于兴2").userName("kulin").password("123").createUser(2L).isDelete(1).userStatus(1).build().activeLike().eq(user::getUserName, "kulin").update(user, true);
+        final User whereUser = User.builder().realName("兴").build();
+        final int update = User.builder().realName("于兴2").userName("kulin").password("123").createUser(2L).isDelete(1).userStatus(1).build().activeLike().eq(whereUser::getUserName, "kulin").update(whereUser, true);
         println(update);
-        Assert.assertEquals(0, update);
+        Assert.assertEquals(1, update);
     }
 
 
